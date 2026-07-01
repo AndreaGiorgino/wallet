@@ -1,0 +1,19 @@
+interface ButtonProps {
+    label: string,
+    type?: "submit" | "reset" | "button",
+    className?: string,
+    onClick?: () => void,
+};
+
+export default function Button({
+    label,
+    type = "button",
+    className,
+    onClick,
+}: ButtonProps) {
+    return (
+        <button type={type} className={`invert inline-flex h-[2.5em] items-center justify-center rounded-full bg-neutral-950 px-12 py-2 font-medium text-neutral-50 transition active:scale-110 hover:scale-95 ${className}`} onClick={onClick}>
+            {label}
+        </button>
+    );
+}
