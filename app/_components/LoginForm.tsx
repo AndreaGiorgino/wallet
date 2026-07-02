@@ -1,18 +1,30 @@
-import { SubmitEvent } from "react";
+import { SubmitEvent, useState } from "react";
 import Button from "./Button";
 import TextInput from "./TextInput";
+import { signIn } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 export default function LogInForm() {
-    function handleSubmit(e: SubmitEvent<HTMLFormElement>): void {
+    const [error, setError] = useState<string | null>(null);
+
+    const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setError(null);
 
         const form = e.target;
-        const formData = new FormData(form);
+        const data = new FormData(form);
 
-        console.log(`email: ${formData.get("email")}`);
-        console.log(`password: ${formData.get("password")}`);
+        const res = await signIn("credentials", {
+            email: data.get("email"),
+            password: data.get("password"),
+            redirect: false,
+        });
 
-        // TODO: do something
+        if (res?.error) {
+            setError("Invalid email or password.");
+        } else {
+            redirect("/dashboard");
+        }
     }
 
     return (
@@ -32,6 +44,11 @@ export default function LogInForm() {
                 <div className="flex justify-end text-sm">
                     <Button type="submit" label="Submit"></Button>
                 </div>
+                {error && (
+                    <div className="bg-red-900/40 px-6 py-3 mt-6 rounded-lg">
+                        {error}
+                    </div>
+                )}
             </form>
         </div>
     );
