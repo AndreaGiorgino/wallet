@@ -2,9 +2,10 @@ import { SubmitEvent, useState } from "react";
 import Button from "./Button";
 import TextInput from "./TextInput";
 import { signIn } from "next-auth/react";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function LogInForm() {
+    const router = useRouter();
     const [error, setError] = useState<string | null>(null);
 
     const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
@@ -23,7 +24,7 @@ export default function LogInForm() {
         if (res?.error) {
             setError("Invalid email or password.");
         } else {
-            redirect("/dashboard");
+            router.push('/dashboard');
         }
     }
 

@@ -1,8 +1,11 @@
 import { SubmitEvent, useState } from "react";
 import Button from "./Button";
 import TextInput from "./TextInput";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function SignInForm() {
+    const router = useRouter();
     const [error, setError] = useState<string | null>(null);
 
     const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
@@ -17,7 +20,7 @@ export default function SignInForm() {
             return null;
         }
 
-        const res = await fetch("http://localhost:8080/login", {
+        const res = await fetch("http://localhost:8080/signin", {
             method: 'POST',
             body: JSON.stringify({
                 first_name: data.get("first_name"),
@@ -28,12 +31,22 @@ export default function SignInForm() {
             headers: { "Content-Type": "application/json" }
         });
 
-        const user = await res.json()
-        if (res.ok && user) {
-            return user;
+        const user = await res?.json();
+        if (!res?.ok || !user) {
+            setError("Something went wrong.");
+            return;
+        }
+
+        const signInRes = await signIn("credentials", {
+            email: data.get("email"),
+            password: data.get("password"),
+            redirect: false,
+        });
+
+        if (signInRes?.error) {
+            setError("Something went wrong.");
         } else {
-            setError("Somethin went wrong.");
-            return null;
+            router.push('/dashboard');
         }
     };
 
