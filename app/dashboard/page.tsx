@@ -1,11 +1,21 @@
-import Profile from "./_components/Profile";
+"use client"
+
+import { useRouter } from "next/navigation";
+import Spinner from "../_components/Spinner/Spinner";
+import { useEffect } from "react";
 
 export default function Dashboard() {
+    const router = useRouter();
+
+    useEffect(() => {
+        router.push("/dashboard/wallet")
+    })
+
     return (
-        <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-            <main className="flex flex-1 w-full max-w-3xl flex-col items-center py-32 px-16 bg-white dark:bg-black sm:items-start">
-                <Profile></Profile>
-            </main>
+        <div className="flex justify-center mt-16 w-full">
+            <div className="bg-neutral-900 rounded-lg p-6 w-[15em] flex justify-center">
+                <Spinner></Spinner>
+            </div>
         </div>
     );
 }

@@ -12,7 +12,7 @@ export default function TextInput({
     placeholder,
     required = false,
     label,
-}: TextInputProps) {
+}: Readonly<TextInputProps>) {
     return (
         <div>
             {

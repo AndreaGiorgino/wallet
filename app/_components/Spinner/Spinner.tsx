@@ -6,7 +6,7 @@ interface SpinnerOptions {
 
 export default function Spinner() {
     return (
-        <div className="wrapper scale-50">
+        <div className="scale-50 wrapper">
             <div className="circle"></div>
             <div className="circle"></div>
             <div className="circle"></div>
