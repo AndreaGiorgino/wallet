@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials"
+import UserData from "./UserData";
 
 const handler = NextAuth({
     providers: [
@@ -15,13 +16,28 @@ const handler = NextAuth({
                     headers: { "Content-Type": "application/json" }
                 });
 
-                const user = await res.json()
-                if (res.ok && user) {
-                    return user;
-                } else return null;
+                const data = await res.json()
+                if (res.ok && data)
+                    return data as UserData;
+                return null;
             }
         })
-    ]
+    ],
+    session: {
+        strategy: "jwt",
+    },
+    callbacks: {
+        async jwt({ token, user }) {
+            if (user)
+                token.accessToken = user.accessToken;
+            return token;
+        },
+        async session({ session, token }) {
+            if (token)
+                session.accessToken = token.accessToken;
+            return session;
+        },
+    },
 });
 
 export { handler as GET, handler as POST };
