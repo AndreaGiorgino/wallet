@@ -1,8 +1,10 @@
+"use client"
+
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { SubmitEvent, useState } from "react";
 import Button from "./Button";
 import TextInput from "./TextInput";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 
 export default function LogInForm() {
     const router = useRouter();

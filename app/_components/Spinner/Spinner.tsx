@@ -1,8 +1,6 @@
-import "./Spinner.css";
+"use client"
 
-interface SpinnerOptions {
-    className?: string,
-};
+import "./Spinner.css";
 
 export default function Spinner() {
     return (
