@@ -1,6 +1,7 @@
 interface ButtonProps {
     label: string,
     type?: "submit" | "reset" | "button",
+    form?: string,
     className?: string,
     onClick?: () => void,
 };
@@ -8,6 +9,7 @@ interface ButtonProps {
 export default function Button({
     label,
     type = "button",
+    form,
     className,
     onClick,
 }: Readonly<ButtonProps>) {
@@ -16,7 +18,7 @@ export default function Button({
             e.currentTarget.blur();
             if (onClick)
                 onClick();
-        }}>
+        }} form={form}>
             {label}
         </button>
     );

@@ -21,7 +21,7 @@ export default function AccessForm() {
         if (session?.status === "authenticated") {
             router.push("/dashboard");
         }
-    }, [session?.status]);
+    }, [session]);
 
     if (session?.status === "loading" || session?.status === "authenticated")
         return (
@@ -35,8 +35,8 @@ export default function AccessForm() {
         <div className="flex flex-col gap-12 items-center mt-16 w-full">
             <div className="overflow-hidden w-[30em]">
                 <div className="flex transition" style={{ transform: `translateX(${formState as number * -100}%)` }}>
-                    <LogInForm></LogInForm>
-                    <SignInForm></SignInForm>
+                    <LogInForm />
+                    <SignInForm />
                 </div>
             </div>
 
