@@ -59,21 +59,22 @@ export default function TransactionsList() {
             <div className="sticky mt-[-1em] left-0 w-full flex justify-center">
                 <div className="flex gap-3 items-end w-full max-w-md rounded-md">
                     <TextInput id="search-input" placeholder="Search..." />
-                    <button aria-label="Add transaction" title="Add transaction" className="rounded-fulldark:invert inline-flex h-[2.5em] items-center justify-center rounded-xl bg-zinc-950 w-[3em] h-full font-medium text-current transition ring-3 border-none active:scale-95 hover:scale-110 focus:scale-110 cursor-pointer">
+                    <button aria-label="Add transaction" title="Add transaction" className="rounded-lg dark:invert inline-flex h-[2.5em] items-center justify-center rounded-xl bg-zinc-950 w-[3em] h-full font-medium text-current transition ring-3 border-none active:scale-95 hover:scale-110 focus:scale-110 cursor-pointer">
                         <BiPlus />
                     </button>
                 </div>
             </div>
             <ErrorMessage text={error} />
             {!error && (
-                <div className="mt-8">
+                <div className="flex flex-1 justify-center">
                     {transactions?.length ? (
                         <ul className="list-none">
                             {/* TODO: render transactions list */}
                         </ul>
                     ) : (
-                        <div className="flex justify-center">
-                            <span className="text-lg font-medium">No transactions found.</span>
+                        <div className="flex gap-3 items-center px-2 py-2 mt-6 w-full max-w-md text-sm font-bold rounded-lg bg-yellow-700/40 text-medium">
+                            <CgDanger size={20} />
+                            No transactions found
                         </div>
                     )}
                 </div>
