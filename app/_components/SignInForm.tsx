@@ -54,7 +54,7 @@ export default function SignInForm() {
     };
 
     return (
-        <div className="flex flex-col w-[30em] px-[2.5em] gap-6">
+        <div className="flex flex-col w-full md:w-[30em] px-2 md:px-[2.5em] gap-6">
             <div className="flex gap-6 items-end">
                 <h3 className="text-2xl">Sign In</h3>
                 {error && (
@@ -65,8 +65,8 @@ export default function SignInForm() {
                 )}
             </div>
             <hr />
-            <form className="bg-neutral-900 rounded-lg p-6 w-[25em]" onSubmit={handleSubmit}>
-                <div className="grid gap-6 mb-6 md:grid-cols-2">
+            <form className="bg-neutral-900 rounded-lg p-6 w-full md:w-[25em]" onSubmit={handleSubmit}>
+                <div className="grid grid-cols-1 gap-6 mb-6 md:grid-cols-2">
                     <div>
                         <TextInput id="first_name" placeholder="Jhon" label="First name" required></TextInput>
                     </div>
@@ -74,19 +74,19 @@ export default function SignInForm() {
                         <TextInput id="last_name" placeholder="Doe" label="Last name" required></TextInput>
                     </div>
 
-                    <div className="col-span-2">
+                    <div className="md:col-span-2">
                         <TextInput id="email" type="email" placeholder="john.doe@company.com" label="Email address" required></TextInput>
                     </div>
 
-                    <div className="col-span-2">
+                    <div className="md:col-span-2">
                         <TextInput id="password" type="password" placeholder="**********" label="Password" required></TextInput>
                     </div>
-                    <div className="col-span-2">
+                    <div className="md:col-span-2">
                         <TextInput id="confirm_password" type="password" placeholder="**********" label="Confirm password" required></TextInput>
                     </div>
                 </div>
-                <div className="flex justify-end text-sm">
-                    <Button type="submit" label="Submit"></Button>
+                <div className="flex flex-col justify-end items-center text-sm md:flex-row">
+                    <Button type="submit" label="Submit" className="w-full md:w-auto"></Button>
                 </div>
             </form>
         </div>

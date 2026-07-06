@@ -89,7 +89,7 @@ export default function ProfileData() {
             {editing ? (
                 <div className="p-6 w-full rounded-lg bg-neutral-900">
                     <form id="data-form" onSubmit={handleSave}>
-                        <div className="grid gap-6 md:grid-cols-2">
+                        <div className="grid grid-cols-1 gap-6 mb-6 md:grid-cols-2">
                             <div>
                                 <TextInput id="first_name" placeholder="Jhon" label="First name" defaultValue={user?.first_name} required></TextInput>
                             </div>
@@ -97,7 +97,7 @@ export default function ProfileData() {
                                 <TextInput id="last_name" placeholder="Doe" label="Last name" defaultValue={user?.last_name} required></TextInput>
                             </div>
 
-                            <div className="col-span-2">
+                            <div className="md:col-span-2">
                                 <TextInput id="email" type="email" placeholder="john.doe@company.com" label="Email address" defaultValue={user?.email} required></TextInput>
                             </div>
                         </div>
@@ -105,22 +105,22 @@ export default function ProfileData() {
                 </div>
             ) : (
                 <div className="p-6 w-full rounded-lg bg-neutral-900">
-                    <div className="grid gap-6 md:grid-cols-2">
+                    <div className="grid grid-cols-1 gap-6 mb-6 md:grid-cols-2">
                         <div>
                             <label htmlFor="first_name" className="block mb-2.5 text-sm font-medium text-heading">First name</label>
-                            <div className="text-lg text-medium">
+                            <div className="text-md text-medium">
                                 {user?.first_name}
                             </div>
                         </div>
                         <div>
                             <label htmlFor="last_name" className="block mb-2.5 text-sm font-medium text-heading">Last name</label>
-                            <div className="text-lg text-medium">
+                            <div className="text-md text-medium">
                                 {user?.last_name}
                             </div>
                         </div>
-                        <div className="col-span-2">
+                        <div className="md:col-span-2">
                             <label htmlFor="email" className="block mb-2.5 text-sm font-medium text-heading">Email address</label>
-                            <div className="text-lg text-medium">
+                            <div className="text-md text-medium">
                                 {user?.email}
                             </div>
                         </div>
@@ -128,13 +128,14 @@ export default function ProfileData() {
                 </div>
             )}
             {editing ? (
-                <div className="flex gap-3 justify-end items-center w-full">
-                    <Button label="Undo" onClick={() => setEditing(false)} className="border-2 border-neutral-100 bg-neutral-100/25 dark:invert-0" />
-                    <Button label="Save" type="submit" form="data-form" />
+
+                <div className="flex flex-col gap-3 justify-end items-center text-sm md:flex-row">
+                    <Button label="Undo" onClick={() => setEditing(false)} className="w-full border-2 border-neutral-100 bg-neutral-100/25 dark:invert-0 md:w-auto" />
+                    <Button label="Save" type="submit" form="data-form" className="w-full md:w-auto" />
                 </div>
             ) : (
-                <div className="flex justify-end items-center w-full">
-                    <Button label="Edit" onClick={() => setEditing(true)} />
+                <div className="flex flex-col justify-end items-center text-sm md:flex-row">
+                    <Button label="Edit" onClick={() => setEditing(true)} className="w-full md:w-auto" />
                 </div>
             )}
         </div>

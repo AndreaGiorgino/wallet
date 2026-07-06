@@ -4,7 +4,7 @@ import AccessForm from "./_components/AccessForm";
 export default function Home() {
     return (
         <div className="flex flex-col flex-1 justify-center items-center font-sans bg-zinc-50 dark:bg-black">
-            <main className="flex flex-col flex-1 items-center px-16 py-32 w-full max-w-3xl bg-white dark:bg-black sm:items-start">
+            <main className="flex flex-col flex-1 items-start px-2 py-16 w-full max-w-3xl md:items-center">
                 <div className="flex justify-center w-full">
                     <div className="flex items-center justify-center w-[30em]">
                         <Image alt="wallet" src={"/wallet.png"} loading="eager" width={200} height={200} className="mx-[-2em]" />
@@ -14,7 +14,7 @@ export default function Home() {
                         </div>
                     </div>
                 </div>
-                <AccessForm></AccessForm>
+                <AccessForm />
             </main>
         </div>
     );

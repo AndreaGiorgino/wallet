@@ -23,7 +23,7 @@ export default function NavButton({
 
     return (
         <a href={callbackUrl} title={label} aria-label={label}>
-            <div className={`flex px-2 py-3 gap-1 items-center justify-center rounded-lg transition cursor-pointer bg-neutral-950 text-neutral-50 active:scale-95 hover:scale-105 focus:scale-105 w-[5em] h-[3em] ${active && "invert"}`}>
+            <div className={`flex px-2 py-2 gap-1 items-center justify-center rounded-full transition cursor-pointer bg-neutral-950 text-neutral-50 active:scale-95 hover:scale-110 focus:scale-110 w-[4em] h-[2.5em] ${active && "invert"}`}>
                 {children}
             </div>
         </a>
