@@ -1,11 +1,11 @@
 "use client"
 
 import Button from "@/app/_components/Button";
-import Spinner from "@/app/_components/Spinner/Spinner";
+import ErrorMessage from "@/app/_components/ErrorMessage";
+import Loader from "@/app/_components/Spinner/Loader";
 import TextInput from "@/app/_components/TextInput";
 import { useSession } from "next-auth/react";
-import { SubmitEvent, useEffect, useState } from "react"
-import { CgDanger } from "react-icons/cg";
+import { SubmitEvent, useEffect, useState } from "react";
 
 interface User {
     first_name: string,
@@ -14,36 +14,44 @@ interface User {
 };
 
 export default function ProfileData() {
-    const { data: session } = useSession();
+    const { data: session, status } = useSession();
     const [editing, setEditing] = useState<boolean>(false);
     const [user, setUser] = useState<User>();
-    const [error, setError] = useState<string | null>(null);
+    const [error, setError] = useState<string>("");
 
     const fetchData = async () => {
-        setError(null);
-        const res = await fetch("http://localhost:8080/user/get", {
-            method: "GET",
-            headers: {
-                Authorization: `Bearer ${session?.accessToken}`,
-            },
-        });
-
-        const data = await res.json();
-        if (!res?.ok || !data) {
-            setError("Cannot get user data.")
+        if (status === "loading")
             return;
-        }
 
-        setUser({
-            first_name: data.first_name,
-            last_name: data.last_name,
-            email: data.email,
-        });
+        setError("");
+
+        try {
+            const res = await fetch("http://localhost:8080/user/get", {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${session?.accessToken}`,
+                },
+            });
+
+            const data = await res.json();
+            if (!res?.ok || !data) {
+                setError("Cannot get user data.")
+                return;
+            }
+
+            setUser({
+                first_name: data.first_name,
+                last_name: data.last_name,
+                email: data.email,
+            });
+        } catch {
+            setError("Something went wrong.")
+        }
     }
 
     const handleSave = async (e: SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setError(null);
+        setError("");
 
         const form = e.target;
         const data = new FormData(form);
@@ -74,22 +82,17 @@ export default function ProfileData() {
         fetchData();
     }, [session]);
 
-    return user ? (
+    return session ? (
         <div className="flex flex-col gap-6">
             <div className="flex gap-6 items-end">
                 <h3 className="text-2xl">Your data</h3>
-                {error && (
-                    <div className="inline-flex flex-1 gap-3 items-center px-2 py-2 mt-6 rounded-lg bg-red-900/40">
-                        <CgDanger size={20} />
-                        {error}
-                    </div>
-                )}
+                <ErrorMessage text={error} />
             </div>
             <hr />
             {editing ? (
-                <div className="p-6 w-full rounded-lg bg-neutral-900">
+                <div className="p-6 w-full rounded-lg bg-neutral-950">
                     <form id="data-form" onSubmit={handleSave}>
-                        <div className="grid grid-cols-1 gap-6 mb-6 md:grid-cols-2">
+                        <div className="grid grid-cols-1 gap-6 mb-6 sm:grid-cols-2">
                             <div>
                                 <TextInput id="first_name" placeholder="Jhon" label="First name" defaultValue={user?.first_name} required></TextInput>
                             </div>
@@ -97,15 +100,15 @@ export default function ProfileData() {
                                 <TextInput id="last_name" placeholder="Doe" label="Last name" defaultValue={user?.last_name} required></TextInput>
                             </div>
 
-                            <div className="md:col-span-2">
+                            <div className="sm:col-span-2">
                                 <TextInput id="email" type="email" placeholder="john.doe@company.com" label="Email address" defaultValue={user?.email} required></TextInput>
                             </div>
                         </div>
                     </form>
                 </div>
             ) : (
-                <div className="p-6 w-full rounded-lg bg-neutral-900">
-                    <div className="grid grid-cols-1 gap-6 mb-6 md:grid-cols-2">
+                <div className="p-6 w-full rounded-lg bg-neutral-950">
+                    <div className="grid grid-cols-1 gap-6 mb-6 sm:grid-cols-2">
                         <div>
                             <label htmlFor="first_name" className="block mb-2.5 text-sm font-medium text-heading">First name</label>
                             <div className="text-md text-medium">
@@ -118,7 +121,7 @@ export default function ProfileData() {
                                 {user?.last_name}
                             </div>
                         </div>
-                        <div className="md:col-span-2">
+                        <div className="sm:col-span-2">
                             <label htmlFor="email" className="block mb-2.5 text-sm font-medium text-heading">Email address</label>
                             <div className="text-md text-medium">
                                 {user?.email}
@@ -128,22 +131,17 @@ export default function ProfileData() {
                 </div>
             )}
             {editing ? (
-
-                <div className="flex flex-col gap-3 justify-end items-center text-sm md:flex-row">
-                    <Button label="Undo" onClick={() => setEditing(false)} className="w-full border-2 border-neutral-100 bg-neutral-100/25 dark:invert-0 md:w-auto" />
-                    <Button label="Save" type="submit" form="data-form" className="w-full md:w-auto" />
+                <div className="flex flex-col gap-3 justify-end items-center text-sm sm:flex-row">
+                    <Button label="Undo" onClick={() => setEditing(false)} className="w-full border-2 border-neutral-100 bg-neutral-100/25 dark:invert-0 sm:w-auto" />
+                    <Button label="Save" type="submit" form="data-form" className="w-full sm:w-auto" />
                 </div>
             ) : (
-                <div className="flex flex-col justify-end items-center text-sm md:flex-row">
-                    <Button label="Edit" onClick={() => setEditing(true)} className="w-full md:w-auto" />
+                <div className="flex flex-col justify-end items-center text-sm sm:flex-row">
+                    <Button label="Edit" onClick={() => setEditing(true)} className="w-full sm:w-auto" />
                 </div>
             )}
         </div>
     ) : (
-        <div className="flex justify-center mt-16 w-full">
-            <div className="bg-neutral-900 rounded-lg p-6 w-[15em] flex justify-center">
-                <Spinner></Spinner>
-            </div>
-        </div>
+        <Loader />
     )
 }
