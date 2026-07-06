@@ -33,12 +33,8 @@ export default function AccessForm() {
         );
     else return (
         <div className="flex flex-col gap-12 items-center mt-16 w-full">
-            <div className="overflow-hidden w-[30em]">
-                <div className="flex transition" style={{ transform: `translateX(${formState as number * -100}%)` }}>
-                    <LogInForm />
-                    <SignInForm />
-                </div>
-            </div>
+            {formState == FormState.LogIn && <LogInForm />}
+            {formState == FormState.SignIn && <SignInForm />}
 
             <div className="flex gap-6 justify-center w-full">
                 <Button label="Log In" onClick={() => setFormState(FormState.LogIn)}></Button>
