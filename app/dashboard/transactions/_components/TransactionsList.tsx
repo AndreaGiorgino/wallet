@@ -9,7 +9,13 @@ import { BiPlus } from "react-icons/bi";
 import { CgDanger } from "react-icons/cg";
 
 interface Transaction {
-
+    id: number,
+    type: string,
+    started_date: string,
+    completed_date: string,
+    description: string,
+    amount: number,
+    state: string,
 };
 
 export default function TransactionsList() {
