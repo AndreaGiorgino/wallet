@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import Button from "./Button";
 import LogInForm from "./LoginForm";
 import SignInForm from "./SignInForm";
-import Spinner from "./Spinner/Spinner";
+import Loader from "./Spinner/Loader";
 
 enum FormState {
     LogIn, SignIn
@@ -18,20 +18,11 @@ export default function AccessForm() {
     const [formState, setFormState] = useState<FormState>(FormState.LogIn);
 
     useEffect(() => {
-        if (session?.status === "authenticated") {
+        if (session?.status === "authenticated")
             router.push("/dashboard");
-        }
     }, [session]);
 
-    if (session?.status === "loading" || session?.status === "authenticated")
-        return (
-            <div className="flex justify-center mt-16 w-full">
-                <div className="bg-neutral-900 rounded-lg p-6 w-[15em] flex justify-center">
-                    <Spinner></Spinner>
-                </div>
-            </div>
-        );
-    else return (
+    return session ? (
         <div className="flex flex-col gap-12 items-center mt-16 w-full">
             {formState == FormState.LogIn && <LogInForm />}
             {formState == FormState.SignIn && <SignInForm />}
@@ -42,5 +33,7 @@ export default function AccessForm() {
                 <Button label="Sign In" onClick={() => setFormState(FormState.SignIn)}></Button>
             </div>
         </div>
-    );
+    ) : (
+        <Loader />
+    )
 }
