@@ -11,8 +11,8 @@ const transactionsLogo = <GrTransaction size={24} />
 
 export default function Navbar() {
     return (
-        <div className="sticky bottom-[2em] left-0 w-full flex justify-center">
-            <ul className="flex gap-2 px-2 py-1 list-none rounded-full bg-neutral-900 w-fit">
+        <div className="sticky bottom-[1em] left-0 w-full flex justify-center">
+            <ul className="flex gap-2 px-2 py-1 list-none rounded-full bg-neutral-950 w-fit">
                 <li>
                     <NavButton label="Profile" callbackUrl="/dashboard/profile" children={profileLogo}></NavButton>
                 </li>
