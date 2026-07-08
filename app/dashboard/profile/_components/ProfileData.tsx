@@ -15,8 +15,8 @@ interface User {
 
 export default function ProfileData() {
     const { data: session, status } = useSession();
-    const [editing, setEditing] = useState<boolean>(false);
     const [user, setUser] = useState<User>();
+    const [editing, setEditing] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
 
     const fetchData = async () => {
@@ -84,7 +84,7 @@ export default function ProfileData() {
 
     return session ? (
         <div className="flex flex-col gap-6">
-            <div className="flex gap-6 items-end">
+            <div className="flex flex-col sm:gap-6 sm:items-end sm:flex-row">
                 <h3 className="text-2xl">Your data</h3>
                 <ErrorMessage text={error} />
             </div>

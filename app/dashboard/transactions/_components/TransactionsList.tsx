@@ -1,11 +1,12 @@
 "use client"
 
+import Button from "@/app/_components/Button";
 import ErrorMessage from "@/app/_components/ErrorMessage";
 import Loader from "@/app/_components/Spinner/Loader";
 import TextInput from "@/app/_components/TextInput";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { BiPlus } from "react-icons/bi";
 import { CgDanger } from "react-icons/cg";
 
 interface Transaction {
@@ -19,6 +20,7 @@ interface Transaction {
 };
 
 export default function TransactionsList() {
+    const router = useRouter();
     const { data: session, status } = useSession();
     const [transactions, setTransactions] = useState<Transaction[] | null>();
     const [error, setError] = useState<string>("");
@@ -59,9 +61,7 @@ export default function TransactionsList() {
             <div className="sticky mt-[-1em] left-0 w-full flex justify-center">
                 <div className="flex gap-3 items-end w-full max-w-md rounded-md">
                     <TextInput id="search-input" placeholder="Search..." />
-                    <button aria-label="Add transaction" title="Add transaction" className="rounded-lg dark:invert inline-flex h-[2.5em] items-center justify-center rounded-xl bg-zinc-950 w-[3em] h-full font-medium text-current transition ring-3 border-none active:scale-95 hover:scale-110 focus:scale-110 cursor-pointer">
-                        <BiPlus />
-                    </button>
+                    <Button label="+" onClick={() => router.push("/dashboard/transactions/details")} className="!px-4" />
                 </div>
             </div>
             <ErrorMessage text={error} />
