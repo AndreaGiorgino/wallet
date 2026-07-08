@@ -90,7 +90,7 @@ export default function ProfileData() {
             </div>
             <hr />
             {editing ? (
-                <div className="p-6 w-full rounded-lg bg-neutral-950">
+                <div className="p-4 w-full rounded-lg sm:p-6 bg-neutral-950">
                     <form id="data-form" onSubmit={handleSave}>
                         <div className="grid grid-cols-1 gap-6 mb-6 sm:grid-cols-2">
                             <div>
@@ -99,7 +99,6 @@ export default function ProfileData() {
                             <div>
                                 <TextInput id="last_name" placeholder="Doe" label="Last name" defaultValue={user?.last_name} required></TextInput>
                             </div>
-
                             <div className="sm:col-span-2">
                                 <TextInput id="email" type="email" placeholder="john.doe@company.com" label="Email address" defaultValue={user?.email} required></TextInput>
                             </div>
@@ -107,25 +106,19 @@ export default function ProfileData() {
                     </form>
                 </div>
             ) : (
-                <div className="p-6 w-full rounded-lg bg-neutral-950">
-                    <div className="grid grid-cols-1 gap-6 mb-6 sm:grid-cols-2">
-                        <div>
-                            <label htmlFor="first_name" className="block mb-2.5 text-sm font-medium text-heading">First name</label>
-                            <div className="text-md text-medium">
-                                {user?.first_name}
-                            </div>
+                <div className="p-4 w-full rounded-lg sm:p-6 bg-neutral-950">
+                    <div className="grid grid-cols-1 gap-6 items-end mb-6 sm:grid-cols-2">
+                        <div className="flex flex-col pb-3 h-full border-b-1">
+                            <span className="text-sm">First name</span>
+                            <span className="mt-2 text-sm text-heading">{user?.first_name}</span>
                         </div>
-                        <div>
-                            <label htmlFor="last_name" className="block mb-2.5 text-sm font-medium text-heading">Last name</label>
-                            <div className="text-md text-medium">
-                                {user?.last_name}
-                            </div>
+                        <div className="flex flex-col pb-3 h-full border-b-1">
+                            <span className="text-sm">Last name</span>
+                            <span className="mt-2 text-sm text-heading">{user?.last_name}</span>
                         </div>
-                        <div className="sm:col-span-2">
-                            <label htmlFor="email" className="block mb-2.5 text-sm font-medium text-heading">Email address</label>
-                            <div className="text-md text-medium">
-                                {user?.email}
-                            </div>
+                        <div className="flex flex-col pb-3 h-full border-b-1 sm:col-span-2">
+                            <span className="text-sm">Email address</span>
+                            <span className="mt-2 text-sm text-heading">{user?.email}</span>
                         </div>
                     </div>
                 </div>
