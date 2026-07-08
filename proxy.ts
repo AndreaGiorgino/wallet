@@ -22,7 +22,7 @@ export async function proxy(request: NextRequest) {
 
         // check for expired session
         const now = Math.floor(Date.now() / 1000);
-        if (decryptedToken.exp && now > (decryptedToken.exp as number))
+        if (decryptedToken.tokenExp && now > decryptedToken.tokenExp)
             return handleAuthFailure(request);
 
         if (request.nextUrl.pathname === "/dashboard")
@@ -35,7 +35,7 @@ export async function proxy(request: NextRequest) {
 }
 
 function handleAuthFailure(request: NextRequest) {
-    const response = NextResponse.redirect(new URL("/", request.url));
+    const response = NextResponse.redirect(new URL("/?reason=expired", request.url));
     response.cookies.delete("next-auth.session-token");
     response.cookies.delete("__Secure-next-auth.session-token");
 
