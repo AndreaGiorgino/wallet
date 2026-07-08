@@ -55,12 +55,12 @@ export default function SignInForm() {
 
     return (
         <div className="flex flex-col w-full sm:w-[30em] px-2 sm:px-[2.5em] gap-6">
-            <div className="flex gap-6 items-end">
+            <div className="flex flex-col sm:gap-6 sm:items-end sm:flex-row">
                 <h3 className="text-2xl">Sign In</h3>
                 <ErrorMessage text={error} />
             </div>
             <hr />
-            <form className="bg-neutral-950 rounded-lg p-6 w-full sm:w-[25em]" onSubmit={handleSubmit}>
+            <form className="bg-neutral-950 rounded-lg p-4 sm:p-6 w-full sm:w-[25em]" onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 gap-6 mb-6 sm:grid-cols-2">
                     <div>
                         <TextInput id="first_name" placeholder="Jhon" label="First name" required></TextInput>

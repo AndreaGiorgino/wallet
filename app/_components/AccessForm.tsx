@@ -17,6 +17,7 @@ export default function AccessForm() {
     const router = useRouter();
     const [formState, setFormState] = useState<FormState>(FormState.LogIn);
 
+
     useEffect(() => {
         if (session?.status === "authenticated")
             router.push("/dashboard");
