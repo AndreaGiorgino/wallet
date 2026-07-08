@@ -25,6 +25,7 @@ export default function TransactionDetails() {
     const router = useRouter();
     const { data: session, status } = useSession();
     const [transactionId, setTransactionId] = useState<number | null>();
+    const [transaction, setTransaction] = useState<TransactionData | null>();
     const [transactionTypes, setTransactionTypes] = useState<string[]>([]);
     const [transactionStates, setTransactionStates] = useState<string[]>([]);
     const [editing, setEditing] = useState<boolean>(false);
@@ -98,30 +99,47 @@ export default function TransactionDetails() {
                                 <TextInput id="amount" type="number" label="Amount" placeholder="Enter amount..." defaultValue="1000" className="ps-[2.5em]" required />
                             </div>
                             <div className="sm:col-span-2">
-                                <DropdownButton label="Type" items={transactionTypes} className="w-full" />
+                                <DropdownButton label="Transaction Type" items={transactionTypes} className="w-full" />
                             </div>
                             <div className="sm:col-span-2">
                                 <DropdownButton label="State" items={transactionStates} className="w-full" />
                             </div>
                             <div className="col-span-3">
-                                <TextInput id="started_date" type="datetime-local" label="Started date" placeholder="Enter started date..." defaultValue={datetimeNow().toISOString().slice(0, 16)} required />
+                                <TextInput id="started_date" type="datetime-local" label="Started Date" placeholder="Enter started date..." defaultValue={datetimeNow().toISOString().slice(0, 16)} required />
                             </div>
                             <div className="col-span-3">
-                                <TextInput id="completed_date" type="datetime-local" label="Completed date" placeholder="Enter completed date..." defaultValue={datetimeNow().toISOString().slice(0, 16)} required />
+                                <TextInput id="completed_date" type="datetime-local" label="Completed Date" placeholder="Enter completed date..." defaultValue={datetimeNow().toISOString().slice(0, 16)} required />
                             </div>
                         </div>
                     </form>
                 </div>
             ) : (
-                <div className="p-6 w-full rounded-lg bg-neutral-950">
-                    <div className="grid grid-cols-1 gap-6 mb-6 sm:grid-cols-3">
-                        <div className="sm:col-span-2">
-                            <label className="block text-sm font-medium text-heading">
-                                <span>Description</span>
-                                <div className="mt-2text-md text-medium">
-
-                                </div>
-                            </label>
+                <div className="p-4 w-full rounded-lg sm:p-6 bg-neutral-950">
+                    <div className="grid grid-cols-1 gap-6 items-end mb-6 sm:grid-cols-6">
+                        <div className="flex flex-col col-span-full pb-3 h-full border-b-1">
+                            <span className="text-sm">Description</span>
+                            <span className="mt-2 text-sm text-heading">{transaction?.description}</span>
+                        </div>
+                        <div className="flex relative flex-col pb-3 h-full border-b-1 sm:col-span-2">
+                            <span className="text-sm">Amount</span>
+                            <span className="absolute bottom-[.6em] left-0 font-bold">&euro;</span>
+                            <span className="mt-2 text-sm text-heading ps-[1.5em]">{transaction?.amount}</span>
+                        </div>
+                        <div className="flex flex-col pb-3 h-full border-b-1 sm:col-span-2">
+                            <span className="text-sm">Transaction Type</span>
+                            <span className="mt-2 text-sm text-heading">{transaction?.type}</span>
+                        </div>
+                        <div className="flex flex-col pb-3 h-full border-b-1 sm:col-span-2">
+                            <span className="text-sm">State</span>
+                            <span className="mt-2 text-sm text-heading">{transaction?.state}</span>
+                        </div>
+                        <div className="flex flex-col pb-3 h-full border-b-1 sm:col-span-3">
+                            <span className="text-sm">Started Date</span>
+                            <span className="mt-2 text-sm text-heading">{transaction?.started_date}</span>
+                        </div>
+                        <div className="flex flex-col pb-3 h-full border-b-1 sm:col-span-3">
+                            <span className="text-sm">Completed Date</span>
+                            <span className="mt-2 text-sm text-heading">{transaction?.completed_date}</span>
                         </div>
                     </div>
                 </div>
