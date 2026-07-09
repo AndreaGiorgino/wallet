@@ -1,8 +1,8 @@
 "use client"
 
 import Button from "@/app/_components/Button";
-import ErrorMessage from "@/app/_components/ErrorMessage";
-import Loader from "@/app/_components/Spinner/Loader";
+import Loader from "@/app/_components/Loader/Loader";
+import Paper from "@/app/_components/Paper";
 import TextInput from "@/app/_components/TextInput";
 import { useSession } from "next-auth/react";
 import { SubmitEvent, useEffect, useState } from "react";
@@ -83,14 +83,9 @@ export default function ProfileData() {
     }, [session]);
 
     return session ? (
-        <div className="flex flex-col gap-6">
-            <div className="flex flex-col sm:gap-6 sm:items-end sm:flex-row">
-                <h3 className="text-2xl">Your data</h3>
-                <ErrorMessage text={error} />
-            </div>
-            <hr />
-            {editing ? (
-                <div className="p-4 w-full rounded-lg sm:p-6 bg-neutral-950">
+        <div className="flex flex-col gap-8 px-2">
+            <Paper error={error} title="Profile Data">
+                {editing ? (
                     <form id="data-form" onSubmit={handleSave}>
                         <div className="grid grid-cols-1 gap-6 mb-6 sm:grid-cols-2">
                             <div>
@@ -104,9 +99,7 @@ export default function ProfileData() {
                             </div>
                         </div>
                     </form>
-                </div>
-            ) : (
-                <div className="p-4 w-full rounded-lg sm:p-6 bg-neutral-950">
+                ) : (
                     <div className="grid grid-cols-1 gap-6 items-end mb-6 sm:grid-cols-2">
                         <div className="flex flex-col pb-3 h-full border-b-1">
                             <span className="text-sm">First name</span>
@@ -121,16 +114,16 @@ export default function ProfileData() {
                             <span className="mt-2 text-sm text-heading">{user?.email}</span>
                         </div>
                     </div>
-                </div>
-            )}
+                )}
+            </Paper>
             {editing ? (
-                <div className="flex flex-col gap-3 justify-end items-center text-sm sm:flex-row">
+                <div className="flex flex-col gap-4 justify-end items-center text-sm sm:flex-row">
                     <Button label="Cancel" onClick={() => setEditing(false)} className="w-full border-2 border-neutral-100 bg-neutral-100/25 dark:invert-0 sm:w-auto" />
-                    <Button label="Save" type="submit" form="data-form" className="w-full sm:w-auto" />
+                    <Button label="Save" type="submit" form="data-form" />
                 </div>
             ) : (
                 <div className="flex flex-col justify-end items-center text-sm sm:flex-row">
-                    <Button label="Edit" onClick={() => setEditing(true)} className="w-full sm:w-auto" />
+                    <Button label="Edit" onClick={() => setEditing(true)} />
                 </div>
             )}
         </div>
