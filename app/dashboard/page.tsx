@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation";
-import Loader from "../_components/Spinner/Loader";
+import Loader from "../_components/Loader/Loader";
 import { useEffect } from "react";
 
 export default function Dashboard() {

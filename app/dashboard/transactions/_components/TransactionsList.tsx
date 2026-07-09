@@ -2,7 +2,7 @@
 
 import Button from "@/app/_components/Button";
 import ErrorMessage from "@/app/_components/ErrorMessage";
-import Loader from "@/app/_components/Spinner/Loader";
+import Loader from "@/app/_components/Loader/Loader";
 import TextInput from "@/app/_components/TextInput";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -59,7 +59,7 @@ export default function TransactionsList() {
     return session ? (
         <div className="flex flex-col">
             <div className="sticky mt-[-1em] left-0 w-full flex justify-center">
-                <div className="flex gap-3 items-end w-full max-w-md rounded-md">
+                <div className="flex gap-4 items-end w-full max-w-md rounded-md">
                     <TextInput id="search-input" placeholder="Search..." />
                     <Button label="+" onClick={() => router.push("/dashboard/transactions/details")} className="!px-4" />
                 </div>

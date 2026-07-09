@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import Button from "./Button";
 import LogInForm from "./LoginForm";
 import SignInForm from "./SignInForm";
-import Loader from "./Spinner/Loader";
+import Loader from "./Loader/Loader";
 
 enum FormState {
     LogIn, SignIn

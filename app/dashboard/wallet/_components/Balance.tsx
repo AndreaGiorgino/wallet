@@ -1,7 +1,7 @@
 "use client"
 
 import ErrorMessage from "@/app/_components/ErrorMessage";
-import Loader from "@/app/_components/Spinner/Loader";
+import Loader from "@/app/_components/Loader/Loader";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react"
 import { CgDanger } from "react-icons/cg";
@@ -37,7 +37,7 @@ export default function Balance() {
     }, [session]);
 
     return session ? (
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-8 px-2">
             <div className="flex gap-6 items-end">
                 <ErrorMessage text={error} />
             </div>

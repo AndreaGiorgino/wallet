@@ -26,18 +26,20 @@ export default function DropdownButton({
                     <BiCaretDown size={20} />
                 </div>
             </button>
-            <div id="dropdown" className={`absolute top-[125%] left-0 z-10 w-full rounded-md ring-2 shadow-lg bg-zinc-50 dark:bg-black transition duration-300 ${hidden && "opacity-0"} overflow-hidden`}>
-                <ul className="p-2 text-sm font-medium" aria-labelledby="dropdown-button">
-                    {items.map((i) => (
-                        <li key={i}>
-                            <button type="button" className="inline-flex items-center p-2 w-full rounded-md cursor-pointer hover:bg-neutral-800/50 hover:text-heading" tabIndex={hidden ? -1 : 0} onClick={() => {
-                                setSelected(i);
-                                setHidden(true);
-                            }}>{i}</button>
-                        </li>
-                    ))}
-                </ul>
-            </div>
+            {items && items.length > 0 && (
+                <div id="dropdown" className={`absolute top-[125%] left-0 z-10 w-full rounded-md ring-2 shadow-lg bg-zinc-50 dark:bg-black transition duration-300 ${hidden && "opacity-0"} overflow-hidden`}>
+                    <ul className="p-2 text-sm font-medium" aria-labelledby="dropdown-button">
+                        {items.map((i) => (
+                            <li key={i}>
+                                <button type="button" className="inline-flex items-center p-2 w-full rounded-md cursor-pointer hover:bg-neutral-800/50 hover:text-heading" tabIndex={hidden ? -1 : 0} onClick={() => {
+                                    setSelected(i);
+                                    setHidden(true);
+                                }}>{i}</button>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
         </div>
     )
 }
