@@ -4,30 +4,35 @@ import { useEffect, useState } from "react";
 import { BiCaretDown } from "react-icons/bi";
 
 interface DropdownButtonProps {
+    id: string,
+    items: string[],
     label?: string,
     className?: string,
-    items: string[],
+    disabled?: boolean,
 };
 
 export default function DropdownButton({
+    id,
+    items = [],
     label,
     className,
-    items = [],
+    disabled = false,
 }: Readonly<DropdownButtonProps>) {
     const [hidden, setHidden] = useState<boolean>(true);
-    const [selected, setSelected] = useState<string>(items[0]);
+    const [selected, setSelected] = useState<string>();
 
     return (
         <div className="block relative">
+            <input id={id} name={id} type="text" className="hidden" value={selected} defaultValue={items[0]} />
             {label && <span className="text-sm">{label}</span>}
-            <button type="button" className={`dark:invert inline-flex h-[2.5em] items-center justify-center rounded-lg bg-zinc-950 px-4 py-2 font-medium text-current transition ring-3 border-none active:scale-95 hover:scale-110 focus:scale-110 cursor-pointer ${label && "mt-2"} ${className}`} onClick={() => setHidden(!hidden)}>
+            <button type="button" className={`dark:invert inline-flex h-[2.5em] items-center justify-center rounded-lg bg-zinc-950 px-4 py-2 font-medium text-current transition ring-3 border-none active:scale-95 hover:scale-110 focus:scale-110 cursor-pointer ${label && "mt-2"} ${className}`} onClick={() => setHidden(!hidden)} disabled={disabled}>
                 <div className="flex gap-6 justify-between items-center w-full">
-                    <span>{selected}</span>
+                    <span>{selected || items[0]}</span>
                     <BiCaretDown size={20} />
                 </div>
             </button>
             {items && items.length > 0 && (
-                <div id="dropdown" className={`absolute top-[125%] left-0 z-10 w-full rounded-md ring-2 shadow-lg bg-zinc-50 dark:bg-black transition duration-300 ${hidden && "opacity-0"} overflow-hidden`}>
+                <div id="dropdown" className={`absolute top-[125%] left-0 z-10 w-full rounded-md ring-2 shadow-lg bg-zinc-50 dark:bg-black transition duration-300 origin-top ${hidden && "scale-y-0"} overflow-hidden`}>
                     <ul className="p-2 text-sm font-medium" aria-labelledby="dropdown-button">
                         {items.map((i) => (
                             <li key={i}>
