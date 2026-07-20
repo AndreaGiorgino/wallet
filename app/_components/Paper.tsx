@@ -7,6 +7,7 @@ interface PaperProps {
     title?: string,
     error?: string,
     className?: string,
+    contentClassName?: string,
     children: ReactNode,
 };
 
@@ -14,6 +15,7 @@ export default function Paper({
     title,
     error,
     className,
+    contentClassName,
     children,
 }: Readonly<PaperProps>) {
     return (
@@ -22,7 +24,7 @@ export default function Paper({
                 {title && <h3 className="text-md text-heading">{title}</h3>}
                 <ErrorMessage text={error} />
             </div>
-            <div id="content" className="p-4 w-full rounded-lg bg-neutral-950">
+            <div className={`p-4 w-full rounded-lg paper-content bg-neutral-950 ${contentClassName}`}>
                 {children}
             </div>
         </div >
