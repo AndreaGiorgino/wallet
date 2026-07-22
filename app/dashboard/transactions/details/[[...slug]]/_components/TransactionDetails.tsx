@@ -54,7 +54,7 @@ export default function TransactionDetails({ types, states, transaction }: {
         transaction = defaultTransaction
 
     const router = useRouter()
-    const { data: session } = useSession()
+    const { status } = useSession()
     const [pending, startTransition] = useTransition()
 
 
@@ -78,13 +78,14 @@ export default function TransactionDetails({ types, states, transaction }: {
 
     const handleDelete = () => {
         startTransition(async () => {
-            if (transaction.id === -1) {
+            const res = await transactionDelete(transaction.id!)
+
+            if (res.success) {
                 await refreshTransactions()
                 router.push("/dashboard/transactions")
-            } else {
-                await refreshTransactionDetails(transaction.id)
-                setEditing(false)
             }
+
+            setError(res.error ?? "")
         })
     }
 
@@ -100,7 +101,7 @@ export default function TransactionDetails({ types, states, transaction }: {
                     await refreshTransactionDetails()
                     router.replace(`/dashboard/transactions/details/${res.id}`)
                 } else {
-                setEditing(false)
+                    setEditing(false)
                     await refreshTransactions()
                     await refreshTransactionDetails(transaction.id!)
                 }
@@ -118,30 +119,33 @@ export default function TransactionDetails({ types, states, transaction }: {
         })
     }
 
-    return session && !pending ? (
+    if (status === "loading")
+        return <Loader />
+
+    return (
         <div className="flex flex-col gap-8 px-2">
-            <Paper error={error} title={transaction.id === -1 ? "New Transaction" : "Transaction Details"}>
+            <Paper error={error} title={isNew ? "New Transaction" : "Transaction Details"}>
                 {editing ? (
                     <form id="data-form" action={handleSubmit}>
                         <div className="grid grid-cols-2 gap-6 items-end mb-6 sm:grid-cols-6">
                             <div className="col-span-full">
-                                <TextInput name="description" placeholder="Bill description..." label="Description" defaultValue={transaction.description} required />
+                                <TextInput name="description" placeholder="Bill description..." label="Description" defaultValue={formState.description} required />
                             </div>
                             <div className="relative col-span-full sm:col-span-2">
                                 <span className="absolute bottom-[0.6em] left-[.75em] font-bold">&euro;</span>
-                                <TextInput name="amount" type="number" label="Amount" placeholder="Enter amount..." defaultValue={transaction.amount.toString()} className="[&>input]:ps-[2.5em]" required />
+                                <TextInput name="amount" type="number" label="Amount" placeholder="Enter amount..." defaultValue={formState.amount.toString()} className="[&>input]:ps-[2.5em]" required />
                             </div>
                             <div className="sm:col-span-2">
-                                <DropdownButton id="type" label="Transaction Type" items={types} defaultValue={transaction.type} className="w-full" />
+                                <DropdownButton id="type" label="Transaction Type" items={types} defaultValue={formState.type} className="w-full" />
                             </div>
                             <div className="sm:col-span-2">
-                                <DropdownButton id="state" label="State" items={states} defaultValue={transaction.state} className="w-full" />
+                                <DropdownButton id="state" label="State" items={states} defaultValue={formState.state} className="w-full" />
                             </div>
                             <div className="sm:col-span-3">
-                                <TextInput name="started_date" type="datetime-local" label="Started Date" placeholder="Enter started date..." defaultValue={transaction.started_date} required />
+                                <TextInput name="started_date" type="datetime-local" label="Started Date" placeholder="Enter started date..." defaultValue={formState.started_date} required />
                             </div>
                             <div className="sm:col-span-3">
-                                <TextInput name="completed_date" type="datetime-local" label="Completed Date" placeholder="Enter completed date..." defaultValue={transaction.completed_date} required />
+                                <TextInput name="completed_date" type="datetime-local" label="Completed Date" placeholder="Enter completed date..." defaultValue={formState.completed_date} required />
                             </div>
                         </div>
                     </form>
@@ -149,41 +153,42 @@ export default function TransactionDetails({ types, states, transaction }: {
                     <div className="grid grid-cols-2 gap-6 items-end mb-6 sm:grid-cols-6">
                         <div className="flex flex-col col-span-full pb-3 h-full border-b-1">
                             <span className="mb-4 text-sm">Description</span>
-                            <span className="text-sm text-heading">{transaction.description}</span>
+                            <span className="text-sm text-heading">{formState.description}</span>
                         </div>
                         <div className="flex relative flex-col col-span-full pb-3 h-full border-b-1 sm:col-span-2">
                             <span className="mb-4 text-sm">Amount</span>
-                            <MoneyBadge amount={transaction.amount} />
+                            <MoneyBadge amount={formState.amount} />
                         </div>
                         <div className="flex flex-col pb-3 h-full border-b-1 sm:col-span-2">
                             <span className="mb-4 text-sm">Transaction Type</span>
-                            <span className="text-sm text-heading">{transaction.type}</span>
+                            <span className="text-sm text-heading">{formState.type}</span>
                         </div>
                         <div className="flex flex-col pb-3 h-full border-b-1 sm:col-span-2">
                             <span className="mb-4 text-sm">State</span>
-                            <span className="text-sm text-heading">{transaction.state}</span>
+                            <span className="text-sm text-heading">{formState.state}</span>
                         </div>
                         <div className="flex flex-col pb-3 h-full border-b-1 sm:col-span-3">
                             <span className="mb-4 text-sm">Started Date</span>
-                            <span className="text-sm text-heading">{transaction.started_date}</span>
+                            <span className="text-sm text-heading">{formState.started_date}</span>
                         </div>
                         <div className="flex flex-col pb-3 h-full border-b-1 sm:col-span-3">
                             <span className="mb-4 text-sm">Completed Date</span>
-                            <span className="text-sm text-heading">{transaction.completed_date}</span>
+                            <span className="text-sm text-heading">{formState.completed_date}</span>
                         </div>
                     </div>
                 )}
             </Paper>
             {editing ? (
                 <div className="flex flex-col gap-4 justify-end items-center text-sm sm:flex-row">
-                    <Button label="Cancel" onClick={handleCancel} className="w-full invert sm:w-auto" />
-                    <Button label="Save" type="submit" form="data-form" />
+                    <Button label="Cancel" onClick={handleCancel} className="w-full invert sm:w-auto" disabled={pending} />
+                    <Button label="Save" type="submit" form="data-form" disabled={pending} />
                 </div>
             ) : (
-                <div className="flex flex-col justify-end items-center text-sm sm:flex-row">
-                    <Button label="Edit" onClick={() => setEditing(true)} />
+                <div className="flex flex-col gap-4 justify-end items-center text-sm sm:flex-row">
+                    <Button label="Delete" onClick={handleDelete} className="w-full ring-red-800 sm:w-auto !text-white !dark:bg-red-50disabled={pending} 0/25 !bg-red-900/40" />
+                    <Button label="Edit" onClick={() => setEditing(true)} disabled={pending} />
                 </div>
             )}
         </div>
-    ) : <Loader />
+    )
 }
