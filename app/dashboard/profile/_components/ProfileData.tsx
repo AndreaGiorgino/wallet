@@ -23,7 +23,7 @@ export default function ProfileData({ user }: { user?: User }) {
     const { status } = useSession()
     const [pending, startTransition] = useTransition()
 
-    const formState = user;
+    const [formState, setFormState] = useState<User>(user);
     const [editing, setEditing] = useState<boolean>(false)
     const [error, setError] = useState<string>("")
 
@@ -35,9 +35,12 @@ export default function ProfileData({ user }: { user?: User }) {
                 setEditing(false)
                 await refreshProfile()
             } else {
-                formState.first_name = formData.get("first_name")!.toString()
-                formState.last_name = formData.get("last_name")!.toString()
-                formState.email = formData.get("email")!.toString()
+                setFormState({
+                    ...formState,
+                    first_name: formData.get("first_name")!.toString(),
+                    last_name: formData.get("last_name")!.toString(),
+                    email: formData.get("email")!.toString(),
+                })
             }
 
             setError(res?.error ?? "")

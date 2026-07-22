@@ -29,7 +29,7 @@ export default function SignInForm() {
     const router = useRouter()
     const [pending, startTransition] = useTransition()
 
-    const formState = defaultFormState;
+    const [formState, setFormState] = useState<FormState>(defaultFormState);
     const [error, setError] = useState<string>("")
 
     const handleSubmit = async (formData: FormData) => {
@@ -47,11 +47,14 @@ export default function SignInForm() {
                 router.replace("/dashboard")
                 await refreshApp()
             } else {
-                formState.first_name = formData.get("first_name")!.toString()
-                formState.last_name = formData.get("last_name")!.toString()
-                formState.email = formData.get("email")!.toString()
-                formState.password = formData.get("password")!.toString()
-                formState.confirm_password = formData.get("confirm_password")!.toString()
+                setFormState({
+                    ...formState,
+                    first_name: formData.get("first_name")!.toString(),
+                    last_name: formData.get("last_name")!.toString(),
+                    email: formData.get("email")!.toString(),
+                    password: formData.get("password")!.toString(),
+                    confirm_password: formData.get("confirm_password")!.toString(),
+                })
             }
 
             setError(res.error ?? "")

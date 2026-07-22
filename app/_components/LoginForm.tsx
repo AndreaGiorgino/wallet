@@ -24,7 +24,7 @@ export default function LogInForm() {
     const params = useSearchParams()
     const [pending, startTransition] = useTransition()
 
-    const formState = defaultFormState;
+    const [formState, setFormState] = useState<FormState>(defaultFormState);
     const [error, setError] = useState<string>("")
 
     const handleSubmit = async (formData: FormData) => {
@@ -40,8 +40,11 @@ export default function LogInForm() {
                     router.replace("/dashboard")
                     await refreshApp()
                 } else {
-                    formState.email = formData.get("email")?.toString() ?? defaultFormState.email
-                    formState.password = defaultFormState.password
+                    setFormState({
+                        ...formState,
+                        email: formData.get("email")?.toString() ?? defaultFormState.email,
+                        password: defaultFormState.password,
+                    })
                     throw {}
                 }
             } catch {
