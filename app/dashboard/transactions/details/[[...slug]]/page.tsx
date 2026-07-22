@@ -36,10 +36,10 @@ export default async function Details({ params }: {
         } catch { }
     })()
 
-    const transactionId = slug ? parseInt(slug[0]) : -1
+    const transactionId = slug ? parseInt(slug[0]) : undefined
     const transaction = await (async () => {
-        if (transactionId === -1)
-            return { id: -1 } as Transaction
+        if (transactionId === undefined)
+            return {} as Transaction
 
         try {
             const res = await fetch(`${process.env.API_URL}/wallet/transactions/details/${transactionId}`, {

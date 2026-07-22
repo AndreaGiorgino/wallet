@@ -8,13 +8,13 @@ import Paper from "@/app/_components/Paper"
 import TextInput from "@/app/_components/TextInput"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import { SubmitEvent, useEffect, useState, useTransition } from "react"
-import { refreshTransactionDetails, transactionCreate, transactionUpdate } from "../actions"
-import { refreshTransactions } from "../../../actions"
+import { useState, useTransition } from "react"
 import MoneyBadge from "../../../_components/MoneyBadge"
+import { refreshTransactions } from "../../../actions"
+import { refreshTransactionDetails, transactionCreate, transactionDelete, transactionUpdate } from "../actions"
 
 export interface Transaction {
-    id: number,
+    id?: number,
     description: string,
     amount: number,
     type: string,
@@ -24,7 +24,7 @@ export interface Transaction {
 }
 
 const defaultTransaction: Transaction = {
-    id: -1,
+    id: undefined,
     description: "",
     amount: 1000,
     type: "",
@@ -48,17 +48,35 @@ export default function TransactionDetails({ types, states, transaction }: {
         return <ErrorMessage text="Failed to load transaction form." />
     if (!transaction)
         return <ErrorMessage text="Failed to load transaction details." />
-    if (transaction.id === -1)
+
+    const isNew = transaction.id === undefined
+    if (isNew)
         transaction = defaultTransaction
 
     const router = useRouter()
     const { data: session } = useSession()
     const [pending, startTransition] = useTransition()
 
-    const [editing, setEditing] = useState<boolean>(transaction.id === -1)
+
+    const [formState, setFormState] = useState<Transaction>(isNew ? defaultTransaction : transaction)
+    const [editing, setEditing] = useState<boolean>(isNew)
     const [error, setError] = useState<string>("")
 
     const handleCancel = () => {
+        if (isNew) {
+            startTransition(async () => {
+                await refreshTransactions()
+                await refreshTransactionDetails()
+                router.push("/dashboard/transactions")
+            })
+        } else {
+            setFormState(transaction)
+            setEditing(false)
+            setError("")
+        }
+    }
+
+    const handleDelete = () => {
         startTransition(async () => {
             if (transaction.id === -1) {
                 await refreshTransactions()
@@ -72,21 +90,29 @@ export default function TransactionDetails({ types, states, transaction }: {
 
     const handleSubmit = (formData: FormData) => {
         startTransition(async () => {
-            const res = transaction.id === -1
+            const res = isNew
                 ? await transactionCreate(formData)
-                : await transactionUpdate(transaction.id, formData)
+                : await transactionUpdate(transaction.id!, formData)
 
             if (res.success) {
+                if (isNew) {
+                    await refreshTransactions()
+                    await refreshTransactionDetails()
+                    router.replace(`/dashboard/transactions/details/${res.id}`)
+                } else {
                 setEditing(false)
-                await refreshTransactionDetails(transaction.id)
-            } else {
-                transaction.description = formData.get("description")!.toString()
-                transaction.amount = parseFloat(formData.get("amount")!.toString())
-                transaction.type = formData.get("type")?.toString() ?? defaultTransaction.type
-                transaction.state = formData.get("state")?.toString() ?? defaultTransaction.state
-                transaction.started_date = formData.get("started_date")!.toString()
-                transaction.completed_date = formData.get("completed_date")?.toString() ?? defaultTransaction.completed_date
-            }
+                    await refreshTransactions()
+                    await refreshTransactionDetails(transaction.id!)
+                }
+            } else setFormState({
+                ...formState,
+                description: formData.get("description")!.toString(),
+                amount: parseFloat(formData.get("amount")!.toString()),
+                type: formData.get("type")?.toString() ?? defaultTransaction.type,
+                state: formData.get("state")?.toString() ?? defaultTransaction.state,
+                started_date: formData.get("started_date")!.toString(),
+                completed_date: formData.get("completed_date")?.toString() ?? defaultTransaction.completed_date,
+            })
 
             setError(res.error ?? "")
         })
