@@ -6,6 +6,7 @@ import { BiCaretDown } from "react-icons/bi";
 interface DropdownButtonProps {
     id: string,
     items: string[],
+    defaultValue?: string,
     label?: string,
     className?: string,
     disabled?: boolean,
@@ -14,16 +15,17 @@ interface DropdownButtonProps {
 export default function DropdownButton({
     id,
     items = [],
+    defaultValue = "",
     label,
     className,
     disabled = false,
 }: Readonly<DropdownButtonProps>) {
     const [hidden, setHidden] = useState<boolean>(true);
-    const [selected, setSelected] = useState<string>();
+    const [selected, setSelected] = useState<string>(defaultValue);
 
     return (
         <div className="block relative">
-            <input id={id} name={id} type="text" className="hidden" value={selected} defaultValue={items[0]} />
+            <input id={id} name={id} type="text" className="hidden" value={selected} readOnly />
             {label && <span className="text-sm">{label}</span>}
             <button type="button" className={`dark:invert inline-flex h-[2.5em] items-center justify-center rounded-lg bg-zinc-950 px-4 py-2 font-medium text-current transition ring-3 border-none active:scale-95 hover:scale-110 focus:scale-110 cursor-pointer ${label && "mt-2"} ${className}`} onClick={() => setHidden(!hidden)} disabled={disabled}>
                 <div className="flex gap-6 justify-between items-center w-full">
