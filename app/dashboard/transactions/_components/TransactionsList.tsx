@@ -66,7 +66,7 @@ export default function TransactionsList({ transactions }: {
                         )
                     })
                 ) : (
-                    <div className="inline-flex flex-1 gap-3 items-center px-2 py-2 text-sm font-medium text-white rounded-lg bg-red-900/40 text-medium bg-yellow-700/40">
+                    <div className="inline-flex gap-3 items-center px-2 py-2 mt-6 text-sm font-medium text-white rounded-lg text-medium bg-yellow-700/40">
                         <CgDanger size={20} />
                         No transactions found
                     </div>
