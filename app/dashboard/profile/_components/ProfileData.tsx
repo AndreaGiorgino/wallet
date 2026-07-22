@@ -1,101 +1,58 @@
 "use client"
 
 import Button from "@/app/_components/Button";
+import ErrorMessage from "@/app/_components/ErrorMessage";
 import Loader from "@/app/_components/Loader/Loader";
 import Paper from "@/app/_components/Paper";
 import TextInput from "@/app/_components/TextInput";
 import { useSession } from "next-auth/react";
-import { SubmitEvent, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
+import { refreshProfile, profileUpdate } from "../actions";
 
-interface User {
+export interface User {
     first_name: string,
     last_name: string,
     email: string,
 };
 
-export default function ProfileData() {
-    const { data: session, status } = useSession();
-    const [user, setUser] = useState<User>();
+export default function ProfileData({ user }: { user?: User }) {
+    if (!user)
+        return <ErrorMessage text="Failed to load profile data." />
+
+    const router = useRouter();
+    const { data: session } = useSession();
+    const [pending, startTransition] = useTransition();
+
     const [editing, setEditing] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
 
-    const fetchData = async () => {
-        if (status === "loading")
-            return;
+    const handleSubmit = async (formData: FormData) => {
+        startTransition(async () => {
+            const res = await profileUpdate(formData);
 
-        setError("");
+            if (res?.success)
+                setEditing(false);
+            setError(res?.error || "");
 
-        try {
-            const res = await fetch("http://localhost:8080/user/get", {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${session?.accessToken}`,
-                },
-            });
-
-            const data = await res.json();
-            if (!res?.ok || !data) {
-                setError("Cannot get user data.")
-                return;
-            }
-
-            setUser({
-                first_name: data.first_name,
-                last_name: data.last_name,
-                email: data.email,
-            });
-        } catch {
-            setError("Something went wrong.")
-        }
-    }
-
-    const handleSave = async (e: SubmitEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        setError("");
-
-        const form = e.target;
-        const data = new FormData(form);
-
-        const res = await fetch("http://localhost:8080/user/update", {
-            method: "POST",
-            headers: {
-                Authorization: `Bearer ${session?.accessToken}`,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                first_name: data.get("first_name"),
-                last_name: data.get("last_name"),
-                email: data.get("email"),
-            }),
+            await refreshProfile();
         });
-
-        if (!res?.ok) {
-            setError("Something went wrong.")
-            return;
-        }
-
-        fetchData();
-        setEditing(false);
     }
 
-    useEffect(() => {
-        fetchData();
-    }, [session]);
-
-    return session ? (
+    return session && !pending ? (
         <div className="flex flex-col gap-8 px-2">
             <Paper error={error} title="Profile Data">
                 {editing ? (
-                    <form id="data-form" onSubmit={handleSave}>
+                    <form id="data-form" action={handleSubmit}>
                         <div className="grid grid-cols-1 gap-6 mb-6 sm:grid-cols-2">
                             <div>
-                                <TextInput id="first_name" placeholder="Jhon" label="First name" defaultValue={user?.first_name} required></TextInput>
+                                <TextInput name="first_name" placeholder="Jhon" label="First name" defaultValue={user?.first_name} required></TextInput>
                             </div>
                             <div>
-                                <TextInput id="last_name" placeholder="Doe" label="Last name" defaultValue={user?.last_name} required></TextInput>
+                                <TextInput name="last_name" placeholder="Doe" label="Last name" defaultValue={user?.last_name} required></TextInput>
                             </div>
                             <div className="sm:col-span-2">
-                                <TextInput id="email" type="email" placeholder="john.doe@company.com" label="Email address" defaultValue={user?.email} required></TextInput>
+                                <TextInput name="email" type="email" placeholder="john.doe@company.com" label="Email address" defaultValue={user?.email} required></TextInput>
                             </div>
                         </div>
                     </form>
