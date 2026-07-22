@@ -94,8 +94,8 @@ export default function TransactionDetails({ types, states, transaction }: {
                                 <TextInput name="description" placeholder="Bill description..." label="Description" defaultValue={transaction.description} required />
                             </div>
                             <div className="relative col-span-full sm:col-span-2">
-                                <span className="absolute bottom-[0.6em] left-[.75em] font-bold">&euro</span>
-                                <TextInput name="amount" type="number" label="Amount" placeholder="Enter amount..." defaultValue={transaction.amount.toString()} className="ps-[2.5em]" required />
+                                <span className="absolute bottom-[0.6em] left-[.75em] font-bold">&euro;</span>
+                                <TextInput name="amount" type="number" label="Amount" placeholder="Enter amount..." defaultValue={transaction.amount.toString()} className="[&>input]:ps-[2.5em]" required />
                             </div>
                             <div className="sm:col-span-2">
                                 <DropdownButton id="type" label="Transaction Type" items={types} defaultValue={transaction.type} className="w-full" />
@@ -119,7 +119,7 @@ export default function TransactionDetails({ types, states, transaction }: {
                         </div>
                         <div className="flex relative flex-col col-span-full pb-3 h-full border-b-1 sm:col-span-2">
                             <span className="mb-6 text-sm">Amount</span>
-                            <span className="absolute bottom-[.6em] left-0 font-bold">&euro</span>
+                            <span className="absolute bottom-[.6em] left-0 font-bold">&euro;</span>
                             <span className="text-sm text-heading ps-[1.5em]">{transaction?.amount}</span>
                         </div>
                         <div className="flex flex-col pb-3 h-full border-b-1 sm:col-span-2">
@@ -143,7 +143,7 @@ export default function TransactionDetails({ types, states, transaction }: {
             </Paper>
             {editing ? (
                 <div className="flex flex-col gap-4 justify-end items-center text-sm sm:flex-row">
-                    <Button label="Cancel" onClick={handleCancel} className="w-full border-2 border-neutral-100 bg-neutral-100/25 dark:invert-0 sm:w-auto" />
+                    <Button label="Cancel" onClick={handleCancel} className="w-full border-2 invert border-neutral-100 sm:w-auto" />
                     <Button label="Save" type="submit" form="data-form" />
                 </div>
             ) : (

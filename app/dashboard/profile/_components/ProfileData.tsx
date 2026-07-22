@@ -75,7 +75,7 @@ export default function ProfileData({ user }: { user?: User }) {
             </Paper>
             {editing ? (
                 <div className="flex flex-col gap-4 justify-end items-center text-sm sm:flex-row">
-                    <Button label="Cancel" onClick={() => setEditing(false)} className="w-full border-2 border-neutral-100 bg-neutral-100/25 dark:invert-0 sm:w-auto" />
+                    <Button label="Cancel" onClick={() => setEditing(false)} className="w-full border-2 invert border-neutral-100 sm:w-auto" />
                     <Button label="Save" type="submit" form="data-form" />
                 </div>
             ) : (

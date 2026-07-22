@@ -32,7 +32,7 @@ export default function ProfileDelete() {
                 <ErrorMessage text="This action cannot be revoked!" className="!p-4 w-full" />
             </Paper>
             <div className="flex flex-col justify-end items-center text-sm sm:flex-row">
-                <Button label="Delete" onClick={handleSubmit} className="w-full ring-red-800 sm:w-auto dark:invert-0 dark:bg-red-500/25 bg-red-900/40" />
+                <Button label="Delete" onClick={handleSubmit} className="w-full ring-red-800 sm:w-auto !text-white !dark:bg-red-500/25 !bg-red-900/40" />
             </div>
         </div>
     ) : <Loader />
