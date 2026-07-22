@@ -55,7 +55,7 @@ export default function TransactionsList({ transactions }: {
                                                             <span className="text-sm text-gray-500">{getTimeString(transaction.started_date)}</span>
                                                         </div>
                                                         <div className={`flex gap-1 text-sm rounded-lg px-3 py-1 ${transaction.amount > 0 ? "bg-green-900/40" : "bg-red-900/40"}`}>
-                                                            <span>&euro</span>
+                                                            <span>&euro;</span>
                                                             <span>{Math.abs(transaction.amount)}</span>
                                                         </div>
                                                     </div>
