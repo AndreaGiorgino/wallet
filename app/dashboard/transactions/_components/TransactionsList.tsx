@@ -6,7 +6,6 @@ import Loader from "@/app/_components/Loader/Loader"
 import TextInput from "@/app/_components/TextInput"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
 import { CgDanger } from "react-icons/cg"
 import { Transaction } from "../details/[[...slug]]/_components/TransactionDetails"
 import MoneyBadge from "./MoneyBadge"
@@ -21,16 +20,17 @@ export default function TransactionsList({ transactions }: {
         return <ErrorMessage text="Failed to load transactions." />
 
     const router = useRouter()
-    const { data: session } = useSession()
-
-    const [error, setError] = useState<string>("")
+    const { status } = useSession()
 
     const getTimeString = (dateString: string) => {
         const date = new Date(dateString)
         return `${date.getHours()}:${date.getMinutes()}`
     }
 
-    return session ? (
+    if (status === "loading")
+        return <Loader />
+
+    return (
         <div className="flex flex-col">
             <div className="sticky mt-[-1em] left-0 w-full flex justify-center">
                 <div className="flex gap-4 items-end w-full max-w-md rounded-md">
@@ -38,40 +38,37 @@ export default function TransactionsList({ transactions }: {
                     <Button label="+" onClick={() => router.push("/dashboard/transactions/details")} className="!px-4" />
                 </div>
             </div>
-            <ErrorMessage text={error} />
-            {!error && (
-                transactions.length !== 0 ? (
-                    transactions.map(({ date, items }) => {
-                        return (
-                            <div key={date} className="flex flex-col flex-1 my-6">
-                                <span className="font-bold">{date}</span>
-                                <ul>
-                                    {items.map(transaction => {
-                                        return (
-                                            <li key={transaction.id} className="mt-3 bg-zinc-50 dark:bg-black">
-                                                <a href={`/dashboard/transactions/details/${transaction.id}`} className="outline-0 focus:[&>*]:bg-neutral-800 hover:[&>*]:bg-neutral-800">
-                                                    <div className="flex items-start p-2 rounded-lg bg-neutral-950">
-                                                        <div className="flex flex-col flex-1">
-                                                            <span className="font-medium">{transaction.description}</span>
-                                                            <span className="text-sm text-gray-500">{getTimeString(transaction.started_date)}</span>
-                                                        </div>
-                                                        <MoneyBadge amount={transaction.amount} />
+            {transactions.length !== 0 ? (
+                transactions.map(({ date, items }) => {
+                    return (
+                        <div key={date} className="flex flex-col flex-1 my-6">
+                            <span className="font-bold">{date}</span>
+                            <ul>
+                                {items.map(transaction => {
+                                    return (
+                                        <li key={transaction.id} className="mt-3 bg-zinc-50 dark:bg-black">
+                                            <a href={`/dashboard/transactions/details/${transaction.id}`} className="outline-0 focus:[&>*]:bg-neutral-800 hover:[&>*]:bg-neutral-800">
+                                                <div className="flex items-start p-2 rounded-lg bg-neutral-950">
+                                                    <div className="flex flex-col flex-1">
+                                                        <span className="font-medium">{transaction.description}</span>
+                                                        <span className="text-sm text-gray-500">{getTimeString(transaction.started_date)}</span>
                                                     </div>
-                                                </a>
-                                            </li>
-                                        )
-                                    })}
-                                </ul>
-                            </div>
-                        )
-                    })
-                ) : (
-                    <div className="inline-flex gap-3 items-center px-2 py-2 mt-6 text-sm font-medium text-white rounded-lg text-medium bg-yellow-700/40">
-                        <CgDanger size={20} />
-                        No transactions found
-                    </div>
-                )
+                                                    <MoneyBadge amount={transaction.amount} />
+                                                </div>
+                                            </a>
+                                        </li>
+                                    )
+                                })}
+                            </ul>
+                        </div>
+                    )
+                })
+            ) : (
+                <div className="inline-flex gap-3 items-center px-2 py-2 mt-6 text-sm font-medium text-white rounded-lg text-medium bg-yellow-700/40">
+                    <CgDanger size={20} />
+                    No transactions found
+                </div>
             )}
         </div >
-    ) : <Loader />
+    )
 }

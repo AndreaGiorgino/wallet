@@ -20,7 +20,7 @@ export default function ProfileData({ user }: { user?: User }) {
     if (!user)
         return <ErrorMessage text="Failed to load profile data." />
 
-    const { data: session } = useSession()
+    const { status } = useSession()
     const [pending, startTransition] = useTransition()
 
     const formState = user;
@@ -44,7 +44,10 @@ export default function ProfileData({ user }: { user?: User }) {
         })
     }
 
-    return session && !pending ? (
+    if (status === "loading")
+        return <Loader />
+
+    return (
         <div className="flex flex-col gap-8 px-2">
             <Paper error={error} title="Profile Data">
                 {editing ? (
@@ -80,16 +83,14 @@ export default function ProfileData({ user }: { user?: User }) {
             </Paper>
             {editing ? (
                 <div className="flex flex-col gap-4 justify-end items-center text-sm sm:flex-row">
-                    <Button label="Cancel" onClick={() => setEditing(false)} className="w-full invert sm:w-auto" />
-                    <Button label="Save" type="submit" form="data-form" />
+                    <Button label="Cancel" onClick={() => setEditing(false)} className="w-full invert sm:w-auto" disabled={pending} />
+                    <Button label="Save" type="submit" form="data-form" disabled={pending} />
                 </div>
             ) : (
                 <div className="flex flex-col justify-end items-center text-sm sm:flex-row">
-                    <Button label="Edit" onClick={() => setEditing(true)} />
+                    <Button label="Edit" onClick={() => setEditing(true)} disabled={pending} />
                 </div>
             )}
         </div>
-    ) : (
-        <Loader />
     )
 }

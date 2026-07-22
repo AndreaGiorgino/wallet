@@ -58,7 +58,10 @@ export default function SignInForm() {
         })
     }
 
-    return !pending ? (
+    if (pending)
+        return <Loader />
+
+    return (
         <div className="flex flex-col gap-8 w-full max-w-[30em] px-2">
             <Paper error={error} title="Sign In">
                 <form id="signin-form" action={handleSubmit}>
@@ -75,8 +78,8 @@ export default function SignInForm() {
                 </form>
             </Paper>
             <div className="flex flex-col justify-end items-center text-sm sm:flex-row">
-                <Button type="submit" label="Submit" form="signin-form" />
+                <Button type="submit" label="Submit" form="signin-form" disabled={pending} />
             </div>
         </div>
-    ) : <Loader />
+    )
 }

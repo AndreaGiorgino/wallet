@@ -13,17 +13,20 @@ enum FormState {
 }
 
 export default function AccessForm() {
-    const session = useSession()
+    const { data: session, status } = useSession()
     const router = useRouter()
 
     const [formState, setFormState] = useState<FormState>(FormState.LogIn)
 
     useEffect(() => {
-        if (session?.status === "authenticated")
+        if (status === "authenticated")
             router.push("/dashboard")
     }, [session])
 
-    return session ? (
+    if (status === "loading")
+        return <Loader />
+
+    return (
         <div className="flex flex-col gap-12 items-center mt-16 w-full">
             <div className="flex gap-6 justify-center w-full">
                 <Button label="Log In" onClick={() => setFormState(FormState.LogIn)}></Button>
@@ -34,7 +37,5 @@ export default function AccessForm() {
             {formState == FormState.LogIn && <LogInForm />}
             {formState == FormState.SignIn && <SignInForm />}
         </div>
-    ) : (
-        <Loader />
     )
 }

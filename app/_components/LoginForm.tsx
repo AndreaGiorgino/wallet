@@ -55,7 +55,10 @@ export default function LogInForm() {
             setError("Your session has expired")
     }, [])
 
-    return !pending ? (
+    if (pending)
+        return <Loader />
+
+    return (
         <div className="flex flex-col gap-8 px-2 w-full max-w-[30em]">
             <Paper error={error} title="Log In">
                 <form id="login-form" action={handleSubmit}>
@@ -67,8 +70,8 @@ export default function LogInForm() {
                 </form>
             </Paper>
             <div className="flex flex-col justify-end items-center text-sm sm:flex-row">
-                <Button type="submit" label="Submit" form="login-form" />
+                <Button type="submit" label="Submit" form="login-form" disabled={pending} />
             </div>
         </div>
-    ) : <Loader />
+    )
 }
