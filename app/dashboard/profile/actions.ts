@@ -27,12 +27,12 @@ export async function profileUpdate(formData: FormData) {
 
         if (!res?.ok)
             throw {}
+
+        revalidatePath("/dashboard/profile")
+        return { success: true }
     } catch {
         return { error: "Failed to save changes." }
     }
-
-    revalidatePath("/dashboard/profile")
-    return { success: true }
 }
 
 export async function profileDelete() {
