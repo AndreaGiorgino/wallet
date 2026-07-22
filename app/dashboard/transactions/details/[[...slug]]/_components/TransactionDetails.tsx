@@ -8,7 +8,7 @@ import Paper from "@/app/_components/Paper"
 import TextInput from "@/app/_components/TextInput"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import { useState, useTransition } from "react"
+import { SubmitEvent, useEffect, useState, useTransition } from "react"
 import { refreshTransactionDetails, transactionCreate, transactionUpdate } from "../actions"
 import { refreshTransactions } from "../../../actions"
 import MoneyBadge from "../../../_components/MoneyBadge"
@@ -23,6 +23,15 @@ export interface Transaction {
     completed_date: string,
 }
 
+const defaultTransaction: Transaction = {
+    id: -1,
+    description: "",
+    amount: 1000,
+    type: "",
+    state: "",
+    started_date: dateTimeNowLocale().toISOString().slice(0, 16),
+    completed_date: dateTimeNowLocale().toISOString().slice(0, 16),
+}
 
 function dateTimeNowLocale() {
     const now = new Date()
@@ -33,23 +42,14 @@ function dateTimeNowLocale() {
 export default function TransactionDetails({ types, states, transaction }: {
     types?: string[],
     states?: string[],
-    transaction: Transaction
+    transaction: Transaction | undefined,
 }) {
     if (!types || !states)
         return <ErrorMessage text="Failed to load transaction form." />
     if (!transaction)
         return <ErrorMessage text="Failed to load transaction details." />
-
     if (transaction.id === -1)
-        transaction = {
-            ...transaction,
-            description: "",
-            amount: 1000,
-            type: "",
-            state: "",
-            started_date: dateTimeNowLocale().toISOString().slice(0, 16),
-            completed_date: dateTimeNowLocale().toISOString().slice(0, 16),
-        }
+        transaction = defaultTransaction
 
     const router = useRouter()
     const { data: session } = useSession()
@@ -58,7 +58,7 @@ export default function TransactionDetails({ types, states, transaction }: {
     const [editing, setEditing] = useState<boolean>(transaction.id === -1)
     const [error, setError] = useState<string>("")
 
-    const handleCancel = async () => {
+    const handleCancel = () => {
         startTransition(async () => {
             if (transaction.id === -1) {
                 await refreshTransactions()
@@ -70,18 +70,25 @@ export default function TransactionDetails({ types, states, transaction }: {
         })
     }
 
-    const handleSubmit = async (formData: FormData) => {
+    const handleSubmit = (formData: FormData) => {
         startTransition(async () => {
             const res = transaction.id === -1
                 ? await transactionCreate(formData)
                 : await transactionUpdate(transaction.id, formData)
 
-            if (res?.success) {
+            if (res.success) {
                 setEditing(false)
                 await refreshTransactionDetails(transaction.id)
-            }
+            } else {
+                transaction.description = formData.get("description")!.toString()
+                transaction.amount = parseFloat(formData.get("amount")!.toString())
+                transaction.type = formData.get("type")?.toString() ?? defaultTransaction.type
+                transaction.state = formData.get("state")?.toString() ?? defaultTransaction.state
+                transaction.started_date = formData.get("started_date")!.toString()
+                transaction.completed_date = formData.get("completed_date")?.toString() ?? defaultTransaction.completed_date
 
-            setError(res?.error || "")
+                setError(res.error ?? "")
+            }
         })
     }
 
@@ -102,7 +109,7 @@ export default function TransactionDetails({ types, states, transaction }: {
                                 <DropdownButton id="type" label="Transaction Type" items={types} defaultValue={transaction.type} className="w-full" />
                             </div>
                             <div className="sm:col-span-2">
-                                <DropdownButton id="state" label="State" items={states} defaultValue={transaction.type} className="w-full" />
+                                <DropdownButton id="state" label="State" items={states} defaultValue={transaction.state} className="w-full" />
                             </div>
                             <div className="sm:col-span-3">
                                 <TextInput name="started_date" type="datetime-local" label="Started Date" placeholder="Enter started date..." defaultValue={transaction.started_date} required />

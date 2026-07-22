@@ -9,20 +9,31 @@ import Loader from "./Loader/Loader"
 import Paper from "./Paper"
 import TextInput from "./TextInput"
 
+interface FormState {
+    first_name: string,
+    last_name: string,
+    email: string,
+    password: string,
+    confirm_password: string,
+}
+
+const defaultFormState: FormState = {
+    first_name: "",
+    last_name: "",
+    email: "",
+    password: "",
+    confirm_password: "",
+}
+
 export default function SignInForm() {
     const router = useRouter()
     const [pending, startTransition] = useTransition()
 
+    const formState = defaultFormState;
     const [error, setError] = useState<string>("")
 
     const handleSubmit = async (formData: FormData) => {
-        debugger
         startTransition(async () => {
-            if (formData.get("password") !== formData.get("confirm_password")) {
-                setError("Passwords does not match.")
-                return
-            }
-
             const res = await signin(formData)
             if (res.success) {
                 try {
@@ -32,16 +43,23 @@ export default function SignInForm() {
                         redirect: false,
                     })
 
-                    if (!res?.ok)
-                        throw {}
-                    router.replace("/dashboard")
+                    if (res?.ok) {
+                        router.replace("/dashboard")
+                        await refreshApp()
+                    } else setError(res?.error ?? "")
                 } catch {
-                    setError("Failed to sign in.")
+                    setError("Failed to log in.")
                 }
+            } else {
+                formState.first_name = formData.get("first_name")!.toString()
+                formState.last_name = formData.get("last_name")!.toString()
+                formState.email = formData.get("email")!.toString()
+                formState.password = formData.get("password")!.toString()
+                formState.confirm_password = formData.get("confirm_password")!.toString()
+
+                setError(res.error ?? "")
             }
 
-            setError(res.error || "")
-            await refreshApp()
         })
     }
 
@@ -50,14 +68,14 @@ export default function SignInForm() {
             <Paper error={error} title="Sign In">
                 <form id="signin-form" action={handleSubmit}>
                     <div className="grid grid-cols-1 gap-6 mb-6 sm:grid-cols-2">
-                        <TextInput name="first_name" placeholder="Jhon" label="First name" required />
-                        <TextInput name="last_name" placeholder="Doe" label="Last name" required />
+                        <TextInput name="first_name" placeholder="Jhon" label="First name" defaultValue={formState.first_name} required />
+                        <TextInput name="last_name" placeholder="Doe" label="Last name" defaultValue={formState.last_name} required />
 
-                        <TextInput name="email" type="email" placeholder="john.doe@company.com" label="Email address" className="sm:col-span-2" required />
+                        <TextInput name="email" type="email" placeholder="john.doe@company.com" label="Email address" className="sm:col-span-2" defaultValue={formState.email} required />
 
-                        <TextInput name="password" type="password" placeholder="**********" label="Password" className="sm:col-span-2" required />
+                        <TextInput name="password" type="password" placeholder="**********" label="Password" className="sm:col-span-2" defaultValue={formState.password} required />
 
-                        <TextInput name="confirm_password" type="password" placeholder="**********" label="Confirm password" className="sm:col-span-2" required />
+                        <TextInput name="confirm_password" type="password" placeholder="**********" label="Confirm password" className="sm:col-span-2" defaultValue={formState.confirm_password} required />
                     </div>
                 </form>
             </Paper>

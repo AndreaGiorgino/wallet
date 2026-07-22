@@ -9,11 +9,22 @@ import Loader from "./Loader/Loader"
 import Paper from "./Paper"
 import TextInput from "./TextInput"
 
+interface FormState {
+    email: string,
+    password: string,
+}
+
+const defaultFormState: FormState = {
+    email: "",
+    password: "",
+}
+
 export default function LogInForm() {
     const router = useRouter()
     const params = useSearchParams()
     const [pending, startTransition] = useTransition()
 
+    const formState = defaultFormState;
     const [error, setError] = useState<string>("")
 
     const handleSubmit = async (formData: FormData) => {
@@ -25,14 +36,17 @@ export default function LogInForm() {
                     redirect: false,
                 })
 
-                if (!res?.ok)
+                if (res?.ok) {
+                    router.replace("/dashboard")
+                    await refreshApp()
+                } else {
+                    formState.email = formData.get("email")?.toString() ?? defaultFormState.email
+                    formState.password = defaultFormState.password
                     throw {}
-                router.replace("/dashboard")
+                }
             } catch {
                 setError("Failed to log in.")
             }
-
-            await refreshApp()
         })
     }
 
@@ -46,9 +60,9 @@ export default function LogInForm() {
             <Paper error={error} title="Log In">
                 <form id="login-form" action={handleSubmit}>
                     <div className="flex flex-col gap-6 mb-6">
-                        <TextInput name="email" type="email" placeholder="john.doe@company.com" label="Email address" required></TextInput>
+                        <TextInput name="email" type="email" placeholder="john.doe@company.com" label="Email address" defaultValue={formState.email} required />
 
-                        <TextInput name="password" type="password" placeholder="**********" label="Password" required></TextInput>
+                        <TextInput name="password" type="password" placeholder="**********" label="Password" defaultValue={formState.password} required />
                     </div>
                 </form>
             </Paper>
