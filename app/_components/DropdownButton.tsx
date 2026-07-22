@@ -29,7 +29,7 @@ export default function DropdownButton({
             {label && <span className="text-sm">{label}</span>}
             <button type="button" className={`inline-flex h-[2.5em] items-center justify-start rounded-lg bg-zinc-950 dark:bg-white dark:text-black px-4 py-2 font-medium text-current transition ring-3 border-none active:scale-95 hover:sm:scale-110 hover:scale-103 w-full sm:w-auto focus:sm:scale-110 focus:scale-103 cursor-pointer ${disabled && "!bg-gray-500"} ${label && "mt-2"} ${className}`} onClick={() => setHidden(!hidden)} disabled={disabled}>
                 <div className="flex gap-6 justify-between items-center w-full">
-                    <span>{selected || items[0]}</span>
+                    <span>{selected}</span>
                     <BiCaretDown size={20} />
                 </div>
             </button>
