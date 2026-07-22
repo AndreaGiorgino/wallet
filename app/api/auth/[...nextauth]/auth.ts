@@ -1,6 +1,6 @@
-import { NextAuthOptions } from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
-import SessionUser from "./SessionUser";
+import { NextAuthOptions } from "next-auth"
+import CredentialsProvider from "next-auth/providers/credentials"
+import SessionUser from "./SessionUser"
 
 export const authOptions: NextAuthOptions = {
     providers: [
@@ -15,13 +15,13 @@ export const authOptions: NextAuthOptions = {
                         method: 'POST',
                         body: JSON.stringify(credentials),
                         headers: { "Content-Type": "application/json" }
-                    });
+                    })
 
-                    const data = await res.json() as SessionUser;
+                    const data = await res.json() as SessionUser
                     if (res.ok && data) {
-                        const base64Url = data.accessToken.split(".")[1];
-                        const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-                        const payload = JSON.parse(atob(base64));
+                        const base64Url = data.accessToken.split(".")[1]
+                        const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/")
+                        const payload = JSON.parse(atob(base64))
 
                         return {
                             id: data.id,
@@ -29,11 +29,11 @@ export const authOptions: NextAuthOptions = {
                             tokenExp: payload.exp,
                             email: data.email,
                             name: `${data.first_name} ${data.last_name}`,
-                        };
+                        }
                     }
-                    return null;
+                    return null
                 } catch (ex) {
-                    return null;
+                    return null
                 }
             }
         })
@@ -52,11 +52,11 @@ export const authOptions: NextAuthOptions = {
 
                 }
             }
-            return token;
+            return token
         },
         async session({ session, token }) {
-            session.accessToken = token.accessToken;
-            return session;
+            session.accessToken = token.accessToken
+            return session
         },
     },
-};
+}

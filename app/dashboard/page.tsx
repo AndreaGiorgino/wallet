@@ -1,8 +1,8 @@
 "use client"
 
-import { useRouter } from "next/navigation";
-import Loader from "../_components/Loader/Loader";
-import { useEffect } from "react";
+import { useRouter } from "next/navigation"
+import Loader from "../_components/Loader/Loader"
+import { useEffect } from "react"
 
 export default function Dashboard() {
     return (
@@ -15,5 +15,5 @@ export default function Dashboard() {
                 </div>
             </main>
         </div>
-    );
+    )
 }

@@ -1,9 +1,9 @@
-import Navbar from "./_components/Navbar";
+import Navbar from "./_components/Navbar"
 
 export default function DashboardLayout({
     children,
 }: Readonly<{
-    children: React.ReactNode;
+    children: React.ReactNode
 }>) {
     return (
         <div className="flex flex-col flex-1 justify-center items-center w-full h-full font-sans bg-zinc-50 dark:bg-black">
@@ -12,5 +12,5 @@ export default function DashboardLayout({
             </main>
             <Navbar></Navbar>
         </div>
-    );
+    )
 }

@@ -1,42 +1,42 @@
 "use client"
 
-import Button from "@/app/_components/Button";
-import ErrorMessage from "@/app/_components/ErrorMessage";
-import Loader from "@/app/_components/Loader/Loader";
-import Paper from "@/app/_components/Paper";
-import TextInput from "@/app/_components/TextInput";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
-import { refreshProfile, profileUpdate } from "../actions";
+import Button from "@/app/_components/Button"
+import ErrorMessage from "@/app/_components/ErrorMessage"
+import Loader from "@/app/_components/Loader/Loader"
+import Paper from "@/app/_components/Paper"
+import TextInput from "@/app/_components/TextInput"
+import { useSession } from "next-auth/react"
+import { useRouter } from "next/navigation"
+import { useState, useTransition } from "react"
+import { refreshProfile, profileUpdate } from "../actions"
 
 export interface User {
     first_name: string,
     last_name: string,
     email: string,
-};
+}
 
 export default function ProfileData({ user }: { user?: User }) {
     if (!user)
         return <ErrorMessage text="Failed to load profile data." />
 
-    const router = useRouter();
-    const { data: session } = useSession();
-    const [pending, startTransition] = useTransition();
+    const router = useRouter()
+    const { data: session } = useSession()
+    const [pending, startTransition] = useTransition()
 
-    const [editing, setEditing] = useState<boolean>(false);
-    const [error, setError] = useState<string>("");
+    const [editing, setEditing] = useState<boolean>(false)
+    const [error, setError] = useState<string>("")
 
     const handleSubmit = async (formData: FormData) => {
         startTransition(async () => {
-            const res = await profileUpdate(formData);
+            const res = await profileUpdate(formData)
 
             if (res?.success)
-                setEditing(false);
-            setError(res?.error || "");
+                setEditing(false)
+            setError(res?.error || "")
 
-            await refreshProfile();
-        });
+            await refreshProfile()
+        })
     }
 
     return session && !pending ? (

@@ -1,16 +1,16 @@
 "use client"
 
-import Button from "@/app/_components/Button";
-import DropdownButton from "@/app/_components/DropdownButton";
-import ErrorMessage from "@/app/_components/ErrorMessage";
-import Loader from "@/app/_components/Loader/Loader";
-import Paper from "@/app/_components/Paper";
-import TextInput from "@/app/_components/TextInput";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
-import { refreshTransactionDetails, transactionCreate, transactionUpdate } from "../actions";
-import { refreshTransactions } from "../../../actions";
+import Button from "@/app/_components/Button"
+import DropdownButton from "@/app/_components/DropdownButton"
+import ErrorMessage from "@/app/_components/ErrorMessage"
+import Loader from "@/app/_components/Loader/Loader"
+import Paper from "@/app/_components/Paper"
+import TextInput from "@/app/_components/TextInput"
+import { useSession } from "next-auth/react"
+import { useRouter } from "next/navigation"
+import { useState, useTransition } from "react"
+import { refreshTransactionDetails, transactionCreate, transactionUpdate } from "../actions"
+import { refreshTransactions } from "../../../actions"
 
 export interface Transaction {
     id: number,
@@ -20,14 +20,14 @@ export interface Transaction {
     state: string,
     started_date: string,
     completed_date: string,
-};
+}
 
 
 function dateTimeNowLocale() {
-    const now = new Date();
-    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-    return now;
-};
+    const now = new Date()
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset())
+    return now
+}
 
 export default function TransactionDetails({ types, states, transaction }: {
     types?: string[],
@@ -48,41 +48,41 @@ export default function TransactionDetails({ types, states, transaction }: {
             state: "",
             started_date: dateTimeNowLocale().toISOString().slice(0, 16),
             completed_date: dateTimeNowLocale().toISOString().slice(0, 16),
-        };
+        }
 
-    const router = useRouter();
-    const { data: session } = useSession();
-    const [pending, startTransition] = useTransition();
+    const router = useRouter()
+    const { data: session } = useSession()
+    const [pending, startTransition] = useTransition()
 
-    const [editing, setEditing] = useState<boolean>(transaction.id === -1);
-    const [error, setError] = useState<string>("");
+    const [editing, setEditing] = useState<boolean>(transaction.id === -1)
+    const [error, setError] = useState<string>("")
 
     const handleCancel = async () => {
         startTransition(async () => {
             if (transaction.id === -1) {
-                await refreshTransactions();
-                router.push("/dashboard/transactions");
+                await refreshTransactions()
+                router.push("/dashboard/transactions")
             } else {
-                await refreshTransactionDetails(transaction.id);
-                setEditing(false);
+                await refreshTransactionDetails(transaction.id)
+                setEditing(false)
             }
-        });
+        })
     }
 
     const handleSubmit = async (formData: FormData) => {
         startTransition(async () => {
             const res = transaction.id === -1
                 ? await transactionCreate(formData)
-                : await transactionUpdate(transaction.id, formData);
+                : await transactionUpdate(transaction.id, formData)
 
             if (res?.success) {
-                setEditing(false);
-                await refreshTransactionDetails(transaction.id);
+                setEditing(false)
+                await refreshTransactionDetails(transaction.id)
             }
 
-            setError(res?.error || "");
-        });
-    };
+            setError(res?.error || "")
+        })
+    }
 
     return session && !pending ? (
         <div className="flex flex-col gap-8 px-2">
@@ -94,7 +94,7 @@ export default function TransactionDetails({ types, states, transaction }: {
                                 <TextInput name="description" placeholder="Bill description..." label="Description" defaultValue={transaction.description} required />
                             </div>
                             <div className="relative col-span-full sm:col-span-2">
-                                <span className="absolute bottom-[0.6em] left-[.75em] font-bold">&euro;</span>
+                                <span className="absolute bottom-[0.6em] left-[.75em] font-bold">&euro</span>
                                 <TextInput name="amount" type="number" label="Amount" placeholder="Enter amount..." defaultValue={transaction.amount.toString()} className="ps-[2.5em]" required />
                             </div>
                             <div className="sm:col-span-2">
@@ -119,7 +119,7 @@ export default function TransactionDetails({ types, states, transaction }: {
                         </div>
                         <div className="flex relative flex-col col-span-full pb-3 h-full border-b-1 sm:col-span-2">
                             <span className="mb-6 text-sm">Amount</span>
-                            <span className="absolute bottom-[.6em] left-0 font-bold">&euro;</span>
+                            <span className="absolute bottom-[.6em] left-0 font-bold">&euro</span>
                             <span className="text-sm text-heading ps-[1.5em]">{transaction?.amount}</span>
                         </div>
                         <div className="flex flex-col pb-3 h-full border-b-1 sm:col-span-2">

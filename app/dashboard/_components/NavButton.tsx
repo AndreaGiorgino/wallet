@@ -14,11 +14,11 @@ export default function NavButton({
     children,
     callbackUrl,
 }: Readonly<NavButtonProps>) {
-    const pathname = usePathname();
-    const [active, setActive] = useState<boolean>(false);
+    const pathname = usePathname()
+    const [active, setActive] = useState<boolean>(false)
 
     useEffect(() => {
-        setActive(pathname.startsWith(callbackUrl));
+        setActive(pathname.startsWith(callbackUrl))
     }, [pathname])
 
     return (

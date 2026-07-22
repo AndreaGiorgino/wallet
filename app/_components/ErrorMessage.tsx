@@ -1,11 +1,11 @@
 "use client"
 
-import { CgDanger } from "react-icons/cg";
+import { CgDanger } from "react-icons/cg"
 
 interface ErrorMessageProps {
     text?: string,
     className?: string,
-};
+}
 
 export default function ErrorMessage({
     text,

@@ -1,20 +1,20 @@
 "use server"
 
-import { authOptions } from "@/app/api/auth/[...nextauth]/auth";
-import { getServerSession } from "next-auth";
-import { revalidatePath } from "next/cache";
+import { authOptions } from "@/app/api/auth/[...nextauth]/auth"
+import { getServerSession } from "next-auth"
+import { revalidatePath } from "next/cache"
 
 export async function refreshTransactionDetails(transactionId: number) {
-    revalidatePath(`/dashboard/transactions/details/${transactionId}`);
+    revalidatePath(`/dashboard/transactions/details/${transactionId}`)
 }
 
 export async function transactionCreate(formData: FormData) {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions)
 
     if (!formData.get("type"))
-        return { error: "Missing required field Transaction Type." };
+        return { error: "Missing required field Transaction Type." }
     if (!formData.get("state"))
-        return { error: "Missing required field Transaction Type." };
+        return { error: "Missing required field Transaction Type." }
 
     try {
         const res = await fetch("http://localhost:8080/wallet/transactions/create", {
@@ -34,21 +34,21 @@ export async function transactionCreate(formData: FormData) {
         })
 
         if (!res.ok)
-            throw {};
+            throw {}
     } catch {
-        return { error: "Failed to save changes." };
+        return { error: "Failed to save changes." }
     }
 
-    return { success: true };
+    return { success: true }
 }
 
 export async function transactionUpdate(transactionId: number, formData: FormData) {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions)
 
     if (!formData.get("type"))
-        return { error: "Missing required field Transaction Type." };
+        return { error: "Missing required field Transaction Type." }
     if (!formData.get("state"))
-        return { error: "Missing required field Transaction Type." };
+        return { error: "Missing required field Transaction Type." }
 
     try {
         const res = await fetch(`http://localhost:8080/wallet/transactions/details/${transactionId}`, {
@@ -69,10 +69,10 @@ export async function transactionUpdate(transactionId: number, formData: FormDat
         })
 
         if (!res.ok)
-            throw {};
+            throw {}
     } catch {
-        return { error: "Failed to save changes." };
+        return { error: "Failed to save changes." }
     }
 
-    return { success: true };
+    return { success: true }
 }

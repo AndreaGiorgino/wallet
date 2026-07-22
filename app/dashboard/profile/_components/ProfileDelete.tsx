@@ -1,29 +1,29 @@
 "use client"
 
-import Button from "@/app/_components/Button";
-import ErrorMessage from "@/app/_components/ErrorMessage";
-import Loader from "@/app/_components/Loader/Loader";
-import Paper from "@/app/_components/Paper";
-import { signOut, useSession } from "next-auth/react";
-import { useState, useTransition } from "react";
-import { profileDelete } from "../actions";
+import Button from "@/app/_components/Button"
+import ErrorMessage from "@/app/_components/ErrorMessage"
+import Loader from "@/app/_components/Loader/Loader"
+import Paper from "@/app/_components/Paper"
+import { signOut, useSession } from "next-auth/react"
+import { useState, useTransition } from "react"
+import { profileDelete } from "../actions"
 
 export default function ProfileDelete() {
     const session = useSession()
-    const [pending, startTransition] = useTransition();
+    const [pending, startTransition] = useTransition()
 
-    const [error, setError] = useState<string>("");
+    const [error, setError] = useState<string>("")
 
     const handleSubmit = async () => {
         // TODO: function "handleSubmit" not implemented yet
         startTransition(async () => {
-            const res = await profileDelete();
+            const res = await profileDelete()
 
             if (res?.success)
-                signOut();
+                signOut()
             setError(res?.error || "")
         })
-    };
+    }
 
     return session && !pending ? (
         <div className="flex flex-col gap-8 px-2">

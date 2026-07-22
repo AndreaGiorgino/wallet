@@ -1,27 +1,27 @@
 "use client"
 
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import Button from "./Button";
-import LogInForm from "./LoginForm";
-import SignInForm from "./SignInForm";
-import Loader from "./Loader/Loader";
+import { useSession } from "next-auth/react"
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+import Button from "./Button"
+import Loader from "./Loader/Loader"
+import LogInForm from "./LoginForm"
+import SignInForm from "./SignInForm"
 
 enum FormState {
     LogIn, SignIn
-};
+}
 
 export default function AccessForm() {
-    const session = useSession();
-    const router = useRouter();
+    const session = useSession()
+    const router = useRouter()
 
-    const [formState, setFormState] = useState<FormState>(FormState.LogIn);
+    const [formState, setFormState] = useState<FormState>(FormState.LogIn)
 
     useEffect(() => {
         if (session?.status === "authenticated")
-            router.push("/dashboard");
-    }, [session]);
+            router.push("/dashboard")
+    }, [session])
 
     return session ? (
         <div className="flex flex-col gap-12 items-center mt-16 w-full">

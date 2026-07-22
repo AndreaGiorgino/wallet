@@ -3,5 +3,5 @@
 import { revalidatePath } from "next/cache"
 
 export async function refreshTransactions() {
-    revalidatePath("/dashboard/transactions");
+    revalidatePath("/dashboard/transactions")
 }

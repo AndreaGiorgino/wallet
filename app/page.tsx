@@ -1,5 +1,5 @@
-import Image from "next/image";
-import AccessForm from "./_components/AccessForm";
+import Image from "next/image"
+import AccessForm from "./_components/AccessForm"
 
 export default function Home() {
     return (
@@ -15,5 +15,5 @@ export default function Home() {
                 <AccessForm />
             </main>
         </div>
-    );
+    )
 }

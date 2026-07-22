@@ -1,14 +1,14 @@
 "use client"
 
-import Button from "@/app/_components/Button";
-import ErrorMessage from "@/app/_components/ErrorMessage";
-import Loader from "@/app/_components/Loader/Loader";
-import TextInput from "@/app/_components/TextInput";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { CgDanger } from "react-icons/cg";
-import { Transaction } from "../details/[[...slug]]/_components/TransactionDetails";
+import Button from "@/app/_components/Button"
+import ErrorMessage from "@/app/_components/ErrorMessage"
+import Loader from "@/app/_components/Loader/Loader"
+import TextInput from "@/app/_components/TextInput"
+import { useSession } from "next-auth/react"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
+import { CgDanger } from "react-icons/cg"
+import { Transaction } from "../details/[[...slug]]/_components/TransactionDetails"
 
 export default function TransactionsList({ transactions }: {
     transactions?: {
@@ -19,15 +19,15 @@ export default function TransactionsList({ transactions }: {
     if (!transactions)
         return <ErrorMessage text="Failed to load transactions." />
 
-    const router = useRouter();
-    const { data: session } = useSession();
+    const router = useRouter()
+    const { data: session } = useSession()
 
-    const [error, setError] = useState<string>("");
+    const [error, setError] = useState<string>("")
 
     const getTimeString = (dateString: string) => {
-        const date = new Date(dateString);
-        return `${date.getHours()}:${date.getMinutes()}`;
-    };
+        const date = new Date(dateString)
+        return `${date.getHours()}:${date.getMinutes()}`
+    }
 
     return session ? (
         <div className="flex flex-col">
@@ -55,7 +55,7 @@ export default function TransactionsList({ transactions }: {
                                                             <span className="text-sm text-gray-500">{getTimeString(transaction.started_date)}</span>
                                                         </div>
                                                         <div className={`flex gap-1 text-sm rounded-lg px-3 py-1 ${transaction.amount > 0 ? "bg-green-900/40" : "bg-red-900/40"}`}>
-                                                            <span>&euro;</span>
+                                                            <span>&euro</span>
                                                             <span>{Math.abs(transaction.amount)}</span>
                                                         </div>
                                                     </div>

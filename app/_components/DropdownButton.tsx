@@ -1,7 +1,7 @@
 "use client"
 
-import { useEffect, useState } from "react";
-import { BiCaretDown } from "react-icons/bi";
+import { useEffect, useState } from "react"
+import { BiCaretDown } from "react-icons/bi"
 
 interface DropdownButtonProps {
     id: string,
@@ -10,7 +10,7 @@ interface DropdownButtonProps {
     label?: string,
     className?: string,
     disabled?: boolean,
-};
+}
 
 export default function DropdownButton({
     id,
@@ -20,8 +20,8 @@ export default function DropdownButton({
     className,
     disabled = false,
 }: Readonly<DropdownButtonProps>) {
-    const [hidden, setHidden] = useState<boolean>(true);
-    const [selected, setSelected] = useState<string>(defaultValue);
+    const [hidden, setHidden] = useState<boolean>(true)
+    const [selected, setSelected] = useState<string>(defaultValue)
 
     return (
         <div className="block relative">
@@ -39,8 +39,8 @@ export default function DropdownButton({
                         {items.map((i) => (
                             <li key={i}>
                                 <button type="button" className="inline-flex items-center p-2 w-full rounded-md cursor-pointer hover:bg-neutral-800/50 hover:text-heading" tabIndex={hidden ? -1 : 0} onClick={() => {
-                                    setSelected(i);
-                                    setHidden(true);
+                                    setSelected(i)
+                                    setHidden(true)
                                 }}>{i}</button>
                             </li>
                         ))}
