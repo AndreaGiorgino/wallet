@@ -37,29 +37,24 @@ export default function SignInForm() {
             const res = await signin(formData)
             if (res.success) {
                 try {
-                    const res = await signIn("credentials", {
+                    await signIn("credentials", {
                         email: formData.get("email"),
                         password: formData.get("password"),
                         redirect: false,
                     })
+                } catch { }
 
-                    if (res?.ok) {
-                        router.replace("/dashboard")
-                        await refreshApp()
-                    } else setError(res?.error ?? "")
-                } catch {
-                    setError("Failed to log in.")
-                }
+                router.replace("/dashboard")
+                await refreshApp()
             } else {
                 formState.first_name = formData.get("first_name")!.toString()
                 formState.last_name = formData.get("last_name")!.toString()
                 formState.email = formData.get("email")!.toString()
                 formState.password = formData.get("password")!.toString()
                 formState.confirm_password = formData.get("confirm_password")!.toString()
-
-                setError(res.error ?? "")
             }
 
+            setError(res.error ?? "")
         })
     }
 

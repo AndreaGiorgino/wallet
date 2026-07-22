@@ -86,9 +86,9 @@ export default function TransactionDetails({ types, states, transaction }: {
                 transaction.state = formData.get("state")?.toString() ?? defaultTransaction.state
                 transaction.started_date = formData.get("started_date")!.toString()
                 transaction.completed_date = formData.get("completed_date")?.toString() ?? defaultTransaction.completed_date
-
-                setError(res.error ?? "")
             }
+
+            setError(res.error ?? "")
         })
     }
 
@@ -150,7 +150,7 @@ export default function TransactionDetails({ types, states, transaction }: {
             </Paper>
             {editing ? (
                 <div className="flex flex-col gap-4 justify-end items-center text-sm sm:flex-row">
-                    <Button label="Cancel" onClick={handleCancel} className="w-full border-2 invert border-neutral-100 sm:w-auto" />
+                    <Button label="Cancel" onClick={handleCancel} className="w-full invert sm:w-auto" />
                     <Button label="Save" type="submit" form="data-form" />
                 </div>
             ) : (
