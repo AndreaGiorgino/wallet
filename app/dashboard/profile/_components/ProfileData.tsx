@@ -33,7 +33,7 @@ export default function ProfileData({ user }: { user?: User }) {
 
             if (res?.success)
                 setEditing(false)
-            setError(res?.error || "")
+            setError(res?.error ?? "")
 
             await refreshProfile()
         })

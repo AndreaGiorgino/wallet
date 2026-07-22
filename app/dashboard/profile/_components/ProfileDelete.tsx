@@ -21,7 +21,7 @@ export default function ProfileDelete() {
 
             if (res?.success)
                 signOut()
-            setError(res?.error || "")
+            setError(res?.error ?? "")
         })
     }
 
