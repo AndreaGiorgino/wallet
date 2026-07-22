@@ -2,151 +2,112 @@
 
 import Button from "@/app/_components/Button";
 import DropdownButton from "@/app/_components/DropdownButton";
+import ErrorMessage from "@/app/_components/ErrorMessage";
 import Loader from "@/app/_components/Loader/Loader";
 import Paper from "@/app/_components/Paper";
 import TextInput from "@/app/_components/TextInput";
 import { useSession } from "next-auth/react";
-import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
+import { refreshTransactionDetails, transactionCreate, transactionUpdate } from "../actions";
+import { refreshTransactions } from "../../../actions";
 
-interface TransactionData {
+export interface Transaction {
     id: number,
-    type: string,
-    started_date: string,
-    completed_date: string,
     description: string,
     amount: number,
+    type: string,
     state: string,
+    started_date: string,
+    completed_date: string,
 };
 
-export default function TransactionDetails() {
+
+function dateTimeNowLocale() {
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    return now;
+};
+
+export default function TransactionDetails({ types, states, transaction }: {
+    types?: string[],
+    states?: string[],
+    transaction?: Transaction
+}) {
+    if (!types || !states)
+        return <ErrorMessage text="Failed to load transaction form." />
+    if (!transaction)
+        return <ErrorMessage text="Failed to load transaction details." />
+
+    if (transaction.id === -1)
+        transaction = {
+            ...transaction,
+            description: "",
+            amount: 1000,
+            type: "",
+            state: "",
+            started_date: dateTimeNowLocale().toISOString().slice(0, 16),
+            completed_date: dateTimeNowLocale().toISOString().slice(0, 16),
+        };
+
     const router = useRouter();
-    const { slug } = useParams();
-    const { data: session, status } = useSession();
+    const { data: session } = useSession();
+    const [pending, startTransition] = useTransition();
 
-    const [transactionId, setTransactionId] = useState<number>(-1);
-    const [transaction, setTransaction] = useState<TransactionData | null>();
-
-    const [transactionTypes, setTransactionTypes] = useState<string[]>([]);
-    const [transactionStates, setTransactionStates] = useState<string[]>([]);
-
-    const [editing, setEditing] = useState<boolean>(false);
+    const [editing, setEditing] = useState<boolean>(transaction.id === -1);
     const [error, setError] = useState<string>("");
 
-    const datetimeNow = () => {
-        const now = new Date();
-        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-        return now;
-    };
-
-    const fetchData = async () => {
-        if (status === "loading")
-            return;
-
-        setError("");
-
-        try {
-            const res = await fetch("http://localhost:8080/config/transaction_types", {
-                method: "GET",
-            });
-
-            const data = await res.json()
-            if (!res.ok || !data)
-                setError("Cannot get transaction types data.");
-            setTransactionTypes(data["transaction_types"])
-        } catch {
-            setError("Cannot get transaction types data.");
-        }
-
-        try {
-            const res = await fetch("http://localhost:8080/config/transaction_states", {
-                method: "GET",
-            });
-
-            const data = await res.json()
-            if (!res.ok || !data)
-                setError("Cannot get transaction states data.");
-            setTransactionStates(data["transaction_states"])
-        } catch {
-            setError(error + " Cannot get transaction states data.");
-        }
-    };
+    const handleCancel = async () => {
+        startTransition(async () => {
+            if (transaction.id === -1) {
+                await refreshTransactions();
+                router.push("/dashboard/transactions");
+            } else {
+                await refreshTransactionDetails(transaction.id);
+                setEditing(false);
+            }
+        });
+    }
 
     const handleSubmit = async (formData: FormData) => {
-        setError("");
+        startTransition(async () => {
+            const res = transaction.id === -1
+                ? await transactionCreate(formData)
+                : await transactionUpdate(transaction.id, formData);
 
-        if (!formData.get("type")) {
-            setError("Missing transaction type.");
-            return;
-        }
-
-        if (!formData.get("state")) {
-            setError("Missing transaction state.");
-            return;
-        }
-
-        try {
-            const res = await fetch("http://localhost:8080/wallet/transactions", {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${session?.accessToken}`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    id: transactionId,
-                    type: formData.get("type"),
-                    description: formData.get("description"),
-                    amount: formData.get("amount"),
-                    started_date: formData.get("started_date"),
-                    completed_date: formData.get("completed_date"),
-                    state: formData.get("state"),
-                })
-            })
-
-            if (!res.ok) {
-                setError("Cannot save the transaction details.");
-                return;
+            if (res?.success) {
+                setEditing(false);
+                await refreshTransactionDetails(transaction.id);
             }
-        } catch {
-            setError("Cannot save the transaction details.");
-            return;
-        }
 
-        router.push("/dashboard/transactions")
+            setError(res?.error || "");
+        });
     };
 
-    useEffect(() => {
-        if (slug && slug[0])
-            setTransactionId(parseInt(slug[0]) || -1);
-        else setEditing(true);
-
-        fetchData();
-    }, [session]);
-
-    return session ? (
+    return session && !pending ? (
         <div className="flex flex-col gap-8 px-2">
-            <Paper error={error} title={transactionId ? "Transaction Details" : "New Transaction"}>
+            <Paper error={error} title={transaction.id === -1 ? "New Transaction" : "Transaction Details"}>
                 {editing ? (
                     <form id="data-form" action={handleSubmit}>
                         <div className="grid grid-cols-2 gap-6 items-end mb-6 sm:grid-cols-6">
                             <div className="col-span-full">
-                                <TextInput id="description" placeholder="Bill description..." label="Description" defaultValue={""} required />
+                                <TextInput name="description" placeholder="Bill description..." label="Description" defaultValue={transaction.description} required />
                             </div>
                             <div className="relative col-span-full sm:col-span-2">
                                 <span className="absolute bottom-[0.6em] left-[.75em] font-bold">&euro;</span>
-                                <TextInput id="amount" type="number" label="Amount" placeholder="Enter amount..." defaultValue="1000" className="ps-[2.5em]" required />
+                                <TextInput name="amount" type="number" label="Amount" placeholder="Enter amount..." defaultValue={transaction.amount.toString()} className="ps-[2.5em]" required />
                             </div>
                             <div className="sm:col-span-2">
-                                <DropdownButton id="type" label="Transaction Type" items={transactionTypes} className="w-full" />
+                                <DropdownButton id="type" label="Transaction Type" items={types} defaultValue={transaction.type} className="w-full" />
                             </div>
                             <div className="sm:col-span-2">
-                                <DropdownButton id="state" label="State" items={transactionStates} className="w-full" />
+                                <DropdownButton id="state" label="State" items={states} defaultValue={transaction.type} className="w-full" />
                             </div>
                             <div className="sm:col-span-3">
-                                <TextInput id="started_date" type="datetime-local" label="Started Date" placeholder="Enter started date..." defaultValue={datetimeNow().toISOString().slice(0, 16)} required />
+                                <TextInput name="started_date" type="datetime-local" label="Started Date" placeholder="Enter started date..." defaultValue={transaction.started_date} required />
                             </div>
                             <div className="sm:col-span-3">
-                                <TextInput id="completed_date" type="datetime-local" label="Completed Date" placeholder="Enter completed date..." defaultValue={datetimeNow().toISOString().slice(0, 16)} required />
+                                <TextInput name="completed_date" type="datetime-local" label="Completed Date" placeholder="Enter completed date..." defaultValue={transaction.completed_date} required />
                             </div>
                         </div>
                     </form>
@@ -182,7 +143,7 @@ export default function TransactionDetails() {
             </Paper>
             {editing ? (
                 <div className="flex flex-col gap-4 justify-end items-center text-sm sm:flex-row">
-                    <Button label="Cancel" onClick={() => router.push("/dashboard/transactions")} className="w-full border-2 border-neutral-100 bg-neutral-100/25 dark:invert-0 sm:w-auto" />
+                    <Button label="Cancel" onClick={handleCancel} className="w-full border-2 border-neutral-100 bg-neutral-100/25 dark:invert-0 sm:w-auto" />
                     <Button label="Save" type="submit" form="data-form" />
                 </div>
             ) : (
@@ -191,7 +152,5 @@ export default function TransactionDetails() {
                 </div>
             )}
         </div>
-    ) : (
-        <Loader />
-    )
+    ) : <Loader />
 }
