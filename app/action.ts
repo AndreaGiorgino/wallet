@@ -7,6 +7,9 @@ export async function refreshApp() {
 }
 
 export async function signin(formData: FormData) {
+    if (formData.get("password") !== formData.get("confirm_password"))
+        return { error: "Passwords does not match." }
+
     try {
         const res = await fetch("http://localhost:8080/signin", {
             method: 'POST',
