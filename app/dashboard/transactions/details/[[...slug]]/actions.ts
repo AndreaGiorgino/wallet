@@ -7,7 +7,7 @@ import { refreshTransactions } from "../../actions"
 
 export async function refreshTransactionDetails(transactionId?: number) {
     if (transactionId)
-    revalidatePath(`/dashboard/transactions/details/${transactionId}`)
+        revalidatePath(`/dashboard/transactions/details/${transactionId}`)
     else revalidatePath("/dashboard/transactions/details")
 }
 
@@ -45,8 +45,6 @@ export async function transactionCreate(formData: FormData) {
     } catch {
         return { error: "Failed to save changes." }
     }
-
-    return { success: true }
 }
 
 export async function transactionUpdate(transactionId: number, formData: FormData) {
@@ -82,6 +80,28 @@ export async function transactionUpdate(transactionId: number, formData: FormDat
     } catch {
         return { error: "Failed to save changes." }
     }
+}
 
-    return { success: true }
+export async function transactionDelete(transactionId: number) {
+    const session = await getServerSession(authOptions)
+
+    try {
+        const res = await fetch(`${process.env.API_URL}/wallet/transactions/delete`, {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${session?.accessToken}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                id: transactionId,
+            })
+        })
+
+        if (!res.ok)
+            throw {}
+
+        return { success: true }
+    } catch {
+        return { error: "Failed to delete transaction." }
+    }
 }
