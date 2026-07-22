@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation"
 import { useState, useTransition } from "react"
 import { refreshTransactionDetails, transactionCreate, transactionUpdate } from "../actions"
 import { refreshTransactions } from "../../../actions"
+import MoneyBadge from "../../../_components/MoneyBadge"
 
 export interface Transaction {
     id: number,
@@ -32,7 +33,7 @@ function dateTimeNowLocale() {
 export default function TransactionDetails({ types, states, transaction }: {
     types?: string[],
     states?: string[],
-    transaction?: Transaction
+    transaction: Transaction
 }) {
     if (!types || !states)
         return <ErrorMessage text="Failed to load transaction form." />
@@ -114,29 +115,28 @@ export default function TransactionDetails({ types, states, transaction }: {
                 ) : (
                     <div className="grid grid-cols-2 gap-6 items-end mb-6 sm:grid-cols-6">
                         <div className="flex flex-col col-span-full pb-3 h-full border-b-1">
-                            <span className="mb-6 text-sm">Description</span>
-                            <span className="text-sm text-heading">{transaction?.description}</span>
+                            <span className="mb-4 text-sm">Description</span>
+                            <span className="text-sm text-heading">{transaction.description}</span>
                         </div>
                         <div className="flex relative flex-col col-span-full pb-3 h-full border-b-1 sm:col-span-2">
-                            <span className="mb-6 text-sm">Amount</span>
-                            <span className="absolute bottom-[.6em] left-0 font-bold">&euro;</span>
-                            <span className="text-sm text-heading ps-[1.5em]">{transaction?.amount}</span>
+                            <span className="mb-4 text-sm">Amount</span>
+                            <MoneyBadge amount={transaction.amount} />
                         </div>
                         <div className="flex flex-col pb-3 h-full border-b-1 sm:col-span-2">
-                            <span className="mb-6 text-sm">Transaction Type</span>
-                            <span className="text-sm text-heading">{transaction?.type}</span>
+                            <span className="mb-4 text-sm">Transaction Type</span>
+                            <span className="text-sm text-heading">{transaction.type}</span>
                         </div>
                         <div className="flex flex-col pb-3 h-full border-b-1 sm:col-span-2">
-                            <span className="mb-6 text-sm">State</span>
-                            <span className="text-sm text-heading">{transaction?.state}</span>
+                            <span className="mb-4 text-sm">State</span>
+                            <span className="text-sm text-heading">{transaction.state}</span>
                         </div>
                         <div className="flex flex-col pb-3 h-full border-b-1 sm:col-span-3">
-                            <span className="mb-6 text-sm">Started Date</span>
-                            <span className="text-sm text-heading">{transaction?.started_date}</span>
+                            <span className="mb-4 text-sm">Started Date</span>
+                            <span className="text-sm text-heading">{transaction.started_date}</span>
                         </div>
                         <div className="flex flex-col pb-3 h-full border-b-1 sm:col-span-3">
-                            <span className="mb-6 text-sm">Completed Date</span>
-                            <span className="text-sm text-heading">{transaction?.completed_date}</span>
+                            <span className="mb-4 text-sm">Completed Date</span>
+                            <span className="text-sm text-heading">{transaction.completed_date}</span>
                         </div>
                     </div>
                 )}
