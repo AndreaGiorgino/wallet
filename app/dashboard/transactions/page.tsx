@@ -14,7 +14,7 @@ export default async function Transactions() {
 
     const transactions = await (async () => {
         try {
-            const res = await fetch("http://localhost:8080/wallet/transactions", {
+            const res = await fetch(`${process.env.API_URL}/wallet/transactions`, {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${session?.accessToken}`,

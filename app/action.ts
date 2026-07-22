@@ -11,7 +11,7 @@ export async function signin(formData: FormData) {
         return { error: "Passwords does not match." }
 
     try {
-        const res = await fetch("http://localhost:8080/signin", {
+        const res = await fetch(`${process.env.API_URL}/signin`, {
             method: 'POST',
             body: JSON.stringify({
                 first_name: formData.get("first_name"),

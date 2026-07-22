@@ -12,7 +12,7 @@ export async function profileUpdate(formData: FormData) {
     const session = await getServerSession(authOptions)
 
     try {
-        const res = await fetch("http://localhost:8080/user", {
+        const res = await fetch(`${process.env.API_URL}/user`, {
             method: "POST",
             headers: {
                 Authorization: `Bearer ${session?.accessToken}`,

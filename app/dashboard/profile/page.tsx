@@ -9,7 +9,7 @@ export default async function Profile() {
 
     const user = await (async () => {
         try {
-            const res = await fetch("http://localhost:8080/user", {
+            const res = await fetch(`${process.env.API_URL}/user`, {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${session?.accessToken}`,

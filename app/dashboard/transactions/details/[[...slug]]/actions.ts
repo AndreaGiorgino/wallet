@@ -17,7 +17,7 @@ export async function transactionCreate(formData: FormData) {
         return { error: "Missing required field Transaction Type." }
 
     try {
-        const res = await fetch("http://localhost:8080/wallet/transactions/create", {
+        const res = await fetch(`${process.env.API_URL}/wallet/transactions/create`, {
             method: "POST",
             headers: {
                 Authorization: `Bearer ${session?.accessToken}`,
@@ -51,7 +51,7 @@ export async function transactionUpdate(transactionId: number, formData: FormDat
         return { error: "Missing required field Transaction Type." }
 
     try {
-        const res = await fetch(`http://localhost:8080/wallet/transactions/details/${transactionId}`, {
+        const res = await fetch(`${process.env.API_URL}/wallet/transactions/details/${transactionId}`, {
             method: "POST",
             headers: {
                 Authorization: `Bearer ${session?.accessToken}`,

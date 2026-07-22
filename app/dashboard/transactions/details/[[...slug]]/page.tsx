@@ -12,7 +12,7 @@ export default async function Details({ params }: {
 
     const types = await (async () => {
         try {
-            const res = await fetch("http://localhost:8080/config/transaction_types", {
+            const res = await fetch(`${process.env.API_URL}/config/transaction_types`, {
                 method: "GET",
             })
 
@@ -25,7 +25,7 @@ export default async function Details({ params }: {
 
     const states = await (async () => {
         try {
-            const res = await fetch("http://localhost:8080/config/transaction_states", {
+            const res = await fetch(`${process.env.API_URL}/config/transaction_states`, {
                 method: "GET",
             })
 
@@ -42,7 +42,7 @@ export default async function Details({ params }: {
             return { id: -1 } as Transaction
 
         try {
-            const res = await fetch(`http://localhost:8080/wallet/transactions/details/${transactionId}`, {
+            const res = await fetch(`${process.env.API_URL}/wallet/transactions/details/${transactionId}`, {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${session?.accessToken}`,

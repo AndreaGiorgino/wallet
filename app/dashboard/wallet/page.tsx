@@ -7,7 +7,7 @@ export default async function Wallet() {
 
     const amount = await (async () => {
         try {
-            const res = await fetch("http://localhost:8080/wallet/balance", {
+            const res = await fetch(`${process.env.API_URL}/wallet/balance`, {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${session?.accessToken}`,
