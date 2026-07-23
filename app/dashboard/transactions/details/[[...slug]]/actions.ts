@@ -3,7 +3,6 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/auth"
 import { getServerSession } from "next-auth"
 import { revalidatePath } from "next/cache"
-import { refreshTransactions } from "../../actions"
 
 export async function refreshTransactionDetails(transactionId?: number) {
     if (transactionId)
