@@ -73,7 +73,7 @@ export default function LogInForm() {
                 </form>
             </Paper>
             <div className="flex flex-col justify-end items-center text-sm sm:flex-row">
-                <Button type="submit" label="Submit" form="login-form" disabled={pending} />
+                <Button type="submit" label="Submit" form="login-form" />
             </div>
         </div>
     )

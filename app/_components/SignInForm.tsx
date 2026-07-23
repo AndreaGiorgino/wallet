@@ -81,7 +81,7 @@ export default function SignInForm() {
                 </form>
             </Paper>
             <div className="flex flex-col justify-end items-center text-sm sm:flex-row">
-                <Button type="submit" label="Submit" form="signin-form" disabled={pending} />
+                <Button type="submit" label="Submit" form="signin-form" />
             </div>
         </div>
     )
