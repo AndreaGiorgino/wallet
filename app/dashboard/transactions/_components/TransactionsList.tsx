@@ -75,15 +75,15 @@ export default function TransactionsList({ transactions }: { transactions?: Tran
                         return
 
                     return (
-                        <div key={date} className="flex flex-col flex-1 my-6 ">
+                        <div key={date} className="flex flex-col flex-1 my-4">
                             <span className="font-bold">{date}</span>
                             <ul>
                                 {filtered.map(transaction => {
                                     return (
-                                        <li key={transaction.id} className="mt-3 bg-zinc-50 dark:bg-black">
+                                        <li key={transaction.id} className="mt-3 bg-zinc-50 dark:bg-black rounded-lg">
                                             <Link href={`/dashboard/transactions/details/${transaction.id}`} className="outline-0 focus:[&>*]:bg-neutral-800 hover:[&>*]:bg-neutral-800">
                                                 <div className="flex items-start p-2 rounded-lg bg-neutral-950">
-                                                    <div className="flex flex-col flex-1">
+                                                    <div className="flex flex-col flex-1 gap-1">
                                                         <span className="font-medium">{transaction.description}</span>
                                                         <span className="text-sm text-gray-500">{getTimeString(transaction.started_date)}</span>
                                                     </div>
