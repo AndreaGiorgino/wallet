@@ -46,19 +46,17 @@ export default function TransactionDetails({ types, states, transaction }: {
 }) {
     if (!types || !states)
         return <ErrorMessage text="Failed to load transaction form." />
-    if (!transaction)
-        return <ErrorMessage text="Failed to load transaction details." />
-
-    const isNew = transaction.id === undefined
-    if (isNew)
-        transaction = defaultTransaction
 
     const router = useRouter()
     const { status } = useSession()
     const [pending, startTransition] = useTransition()
 
+    const isNew = transaction?.id === undefined
+    if (!transaction && !isNew)
+        return <ErrorMessage text="Failed to load transaction details." />
 
     const [formState, setFormState] = useState<Transaction>(isNew ? defaultTransaction : transaction)
+
     const [editing, setEditing] = useState<boolean>(isNew)
     const [error, setError] = useState<string>("")
 
@@ -78,7 +76,7 @@ export default function TransactionDetails({ types, states, transaction }: {
 
     const handleDelete = () => {
         startTransition(async () => {
-            const res = await transactionDelete(transaction.id!)
+            const res = await transactionDelete(formState.id!)
 
             if (res.success) {
                 await refreshTransactions()
@@ -93,7 +91,7 @@ export default function TransactionDetails({ types, states, transaction }: {
         startTransition(async () => {
             const res = isNew
                 ? await transactionCreate(formData)
-                : await transactionUpdate(transaction.id!, formData)
+                : await transactionUpdate(formState.id!, formData)
 
             if (res.success) {
                 if (isNew) {
@@ -103,7 +101,7 @@ export default function TransactionDetails({ types, states, transaction }: {
                 } else {
                     setEditing(false)
                     await refreshTransactions()
-                    await refreshTransactionDetails(transaction.id!)
+                    await refreshTransactionDetails(formState.id!)
                 }
             } else setFormState({
                 ...formState,
@@ -185,7 +183,7 @@ export default function TransactionDetails({ types, states, transaction }: {
                 </div>
             ) : (
                 <div className="flex flex-col gap-4 justify-end items-center text-sm sm:flex-row">
-                    <Button label="Delete" onClick={handleDelete} className="w-full ring-red-800 sm:w-auto !text-white !dark:bg-red-50disabled={pending} 0/25 !bg-red-900/40" />
+                    <Button label="Delete" onClick={handleDelete} className="w-full ring-red-800 sm:w-auto !text-white !dark:bg-red-500/25 !bg-red-900/40" disabled={pending} />
                     <Button label="Edit" onClick={() => setEditing(true)} disabled={pending} />
                 </div>
             )}

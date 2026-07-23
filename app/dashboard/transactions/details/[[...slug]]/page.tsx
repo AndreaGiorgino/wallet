@@ -39,7 +39,7 @@ export default async function Details({ params }: {
     const transactionId = slug ? parseInt(slug[0]) : undefined
     const transaction = await (async () => {
         if (transactionId === undefined)
-            return {} as Transaction
+            return undefined
 
         try {
             const res = await fetch(`${process.env.API_URL}/wallet/transactions/details/${transactionId}`, {
