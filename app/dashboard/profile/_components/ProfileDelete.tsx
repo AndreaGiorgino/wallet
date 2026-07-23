@@ -24,8 +24,8 @@ export default function ProfileDelete() {
         })
     }
 
-    if (status === "loading")
-        return <Loader />
+    if (status === "loading" || pending)
+        return <></>
 
     return (
         <div className="flex flex-col gap-8 px-2">
@@ -34,7 +34,7 @@ export default function ProfileDelete() {
                 <ErrorMessage text="This action cannot be revoked!" className="!p-4 w-full" />
             </Paper>
             <div className="flex flex-col justify-end items-center text-sm sm:flex-row">
-                <Button label="Delete" onClick={handleSubmit} className="w-full ring-red-800 sm:w-auto !text-white !dark:bg-red-500/25 !bg-red-900/40" disabled={pending} />
+                <Button label="Delete" onClick={handleSubmit} className="w-full ring-red-800 sm:w-auto !text-white !dark:bg-red-500/25 !bg-red-900/40" />
             </div>
         </div>
     )

@@ -8,10 +8,16 @@ import Paper from "@/app/_components/Paper"
 import TextInput from "@/app/_components/TextInput"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import { useState, useTransition } from "react"
+import { useEffect, useState, useTransition } from "react"
 import MoneyBadge from "../../../_components/MoneyBadge"
 import { refreshTransactions } from "../../../actions"
 import { refreshTransactionDetails, transactionCreate, transactionDelete, transactionUpdate } from "../actions"
+
+function dateTimeNowLocale() {
+    const now = new Date()
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset())
+    return now
+}
 
 export interface Transaction {
     id?: number,
@@ -31,12 +37,6 @@ const defaultTransaction: Transaction = {
     state: "",
     started_date: dateTimeNowLocale().toISOString().slice(0, 16),
     completed_date: dateTimeNowLocale().toISOString().slice(0, 16),
-}
-
-function dateTimeNowLocale() {
-    const now = new Date()
-    now.setMinutes(now.getMinutes() - now.getTimezoneOffset())
-    return now
 }
 
 export default function TransactionDetails({ types, states, transaction }: {
@@ -117,7 +117,12 @@ export default function TransactionDetails({ types, states, transaction }: {
         })
     }
 
-    if (status === "loading")
+    useEffect(() => {
+        if (transaction)
+            setFormState(transaction)
+    }, [transaction])
+
+    if (status === "loading" || pending)
         return <Loader />
 
     return (
@@ -178,13 +183,13 @@ export default function TransactionDetails({ types, states, transaction }: {
             </Paper>
             {editing ? (
                 <div className="flex flex-col gap-4 justify-end items-center text-sm sm:flex-row">
-                    <Button label="Cancel" onClick={handleCancel} className="w-full invert sm:w-auto" disabled={pending} />
-                    <Button label="Save" type="submit" form="data-form" disabled={pending} />
+                    <Button label="Cancel" onClick={handleCancel} className="w-full invert sm:w-auto" />
+                    <Button label="Save" type="submit" form="data-form" />
                 </div>
             ) : (
                 <div className="flex flex-col gap-4 justify-end items-center text-sm sm:flex-row">
-                    <Button label="Delete" onClick={handleDelete} className="w-full ring-red-800 sm:w-auto !text-white !dark:bg-red-500/25 !bg-red-900/40" disabled={pending} />
-                    <Button label="Edit" onClick={() => setEditing(true)} disabled={pending} />
+                    <Button label="Delete" onClick={handleDelete} className="w-full ring-red-800 sm:w-auto !text-white !dark:bg-red-500/25 !bg-red-900/40" />
+                    <Button label="Edit" onClick={() => setEditing(true)} />
                 </div>
             )}
         </div>
