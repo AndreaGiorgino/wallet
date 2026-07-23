@@ -130,7 +130,7 @@ export default function TransactionDetails({ types, states, transaction }: {
             <Paper error={error} title={isNew ? "New Transaction" : "Transaction Details"}>
                 {editing ? (
                     <form id="data-form" action={handleSubmit}>
-                        <div className="grid grid-cols-2 gap-6 items-end mb-6 sm:grid-cols-6">
+                        <div className="grid grid-cols-1 gap-6 items-end mb-6 sm:grid-cols-6">
                             <div className="col-span-full">
                                 <TextInput name="description" placeholder="Bill description..." label="Description" defaultValue={formState.description} required />
                             </div>
@@ -153,7 +153,7 @@ export default function TransactionDetails({ types, states, transaction }: {
                         </div>
                     </form>
                 ) : (
-                    <div className="grid grid-cols-2 gap-6 items-end mb-6 sm:grid-cols-6">
+                    <div className="grid grid-cols-1 gap-6 items-end mb-6 sm:grid-cols-6">
                         <div className="flex flex-col col-span-full pb-3 h-full border-b-1">
                             <span className="mb-4 text-sm">Description</span>
                             <span className="text-sm text-heading">{formState.description}</span>

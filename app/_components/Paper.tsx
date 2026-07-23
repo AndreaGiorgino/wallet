@@ -24,7 +24,7 @@ export default function Paper({
                 {title && <h3 className="text-md text-heading">{title}</h3>}
                 <ErrorMessage text={error} className="flex-1" />
             </div>
-            <div className={`p-4 w-full rounded-lg paper-content bg-neutral-950 ${contentClassName}`}>
+            <div className={`px-4 py-4 w-full rounded-lg paper-content bg-neutral-950 ${contentClassName}`}>
                 {children}
             </div>
         </section>

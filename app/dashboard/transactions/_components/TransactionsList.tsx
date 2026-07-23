@@ -64,7 +64,7 @@ export default function TransactionsList({ transactions }: { transactions?: Tran
             <div className="sticky mt-[-1em] left-0 w-full flex justify-center">
                 <div className="flex gap-4 items-end w-full max-w-md rounded-md">
                     <TextInput name="search-input" placeholder="Search..." defaultValue={query} onChange={(e) => setQuery(e.target.value)} />
-                    <Button label="+" onClick={() => router.push("/dashboard/transactions/details")} className="!px-4" />
+                    <Button label="+" onClick={() => router.push("/dashboard/transactions/details")} className="!px-4 flex-1" />
                 </div>
             </div>
             {state.length !== 0 ? (
@@ -75,9 +75,9 @@ export default function TransactionsList({ transactions }: { transactions?: Tran
                         return
 
                     return (
-                        <div key={date} className="flex flex-col flex-1 my-4">
+                        <section key={date} className="flex flex-col flex-1 my-4">
                             <span className="font-bold">{date}</span>
-                            <ul>
+                            <ul className="list-none">
                                 {filtered.map(transaction => {
                                     return (
                                         <li key={transaction.id} className="mt-3 bg-zinc-50 dark:bg-black rounded-lg">
@@ -94,7 +94,7 @@ export default function TransactionsList({ transactions }: { transactions?: Tran
                                     )
                                 })}
                             </ul>
-                        </div>
+                        </section>
                     )
                 })
             ) : (

@@ -18,27 +18,29 @@ export default function LastTransactions({ transactions = [] }: { transactions?:
         return <></>
 
     return (
-        <Paper title="Recent transactions" contentClassName="bg-zinc-50 dark:bg-black px-0">
-            <ul>
-                {transactions.map(transaction => {
-                    return (
-                        <li key={transaction.id} className="mt-1 bg-zinc-50 dark:bg-black rounded-lg">
-                            <Link href={`/dashboard/transactions/details/${transaction.id}`} className="outline-0 focus:[&>*]:bg-neutral-800 hover:[&>*]:bg-neutral-800">
-                                <div className="flex items-start p-2 rounded-lg bg-neutral-950">
-                                    <div className="flex flex-col flex-1 gap-1">
-                                        <span className="font-medium">{transaction.description}</span>
-                                        <span className="text-sm text-gray-500">{new Date(transaction.started_date).toLocaleString()}</span>
+        <div className="flex flex-col gap-8 px-2">
+            <Paper title="Recent transactions" contentClassName="bg-zinc-50 dark:bg-black !px-0 !py-0">
+                <ul className="list-none">
+                    {transactions.map(transaction => {
+                        return (
+                            <li key={transaction.id} className="mt-1 bg-zinc-50 dark:bg-black rounded-lg">
+                                <Link href={`/dashboard/transactions/details/${transaction.id}`} className="outline-0 focus:[&>*]:bg-neutral-800 hover:[&>*]:bg-neutral-800">
+                                    <div className="flex items-start p-2 rounded-lg bg-neutral-950">
+                                        <div className="flex flex-col flex-1 gap-1">
+                                            <span className="font-medium">{transaction.description}</span>
+                                            <span className="text-sm text-gray-500">{new Date(transaction.started_date).toLocaleString()}</span>
+                                        </div>
+                                        <MoneyBadge amount={transaction.amount} />
                                     </div>
-                                    <MoneyBadge amount={transaction.amount} />
-                                </div>
-                            </Link>
-                        </li>
-                    )
-                })}
-            </ul>
-            <div className="relative flex justify-end items-center mt-3">
-                <Link href={"/dashboard/transactions"} className="underline">View all</Link>
-            </div>
-        </Paper>
+                                </Link>
+                            </li>
+                        )
+                    })}
+                </ul>
+                <div className="relative flex justify-end items-center mt-3">
+                    <Link href={"/dashboard/transactions"} className="underline">View all</Link>
+                </div>
+            </Paper>
+        </div>
     )
 }
