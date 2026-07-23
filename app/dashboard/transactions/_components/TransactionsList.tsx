@@ -9,23 +9,32 @@ import { useRouter } from "next/navigation"
 import { CgDanger } from "react-icons/cg"
 import { Transaction } from "../details/[[...slug]]/_components/TransactionDetails"
 import MoneyBadge from "./MoneyBadge"
+import { useEffect, useState } from "react"
+import Link from "next/link"
 
-export default function TransactionsList({ transactions }: {
-    transactions?: {
-        ["date"]: string,
-        ["items"]: Transaction[]
-    }[]
-}) {
+const getTimeString = (dateString: string) => {
+    const date = new Date(dateString)
+    return `${("0" + date.getUTCHours()).slice(-2)}:${("0" + date.getUTCMinutes()).slice(-2)}`
+}
+
+export interface TransactionsGroup {
+    ["date"]: string,
+    ["items"]: Transaction[]
+}
+
+export default function TransactionsList({ transactions }: { transactions?: TransactionsGroup[] }) {
     if (!transactions)
         return <ErrorMessage text="Failed to load transactions." />
 
     const router = useRouter()
     const { status } = useSession()
 
-    const getTimeString = (dateString: string) => {
-        const date = new Date(dateString)
-        return `${date.getHours()}:${date.getMinutes()}`
-    }
+    const [state, setState] = useState<TransactionsGroup[]>(transactions);
+
+    useEffect(() => {
+        if (transactions)
+            setState(transactions)
+    }, [transactions])
 
     if (status === "loading")
         return <Loader />
@@ -47,7 +56,7 @@ export default function TransactionsList({ transactions }: {
                                 {items.map(transaction => {
                                     return (
                                         <li key={transaction.id} className="mt-3 bg-zinc-50 dark:bg-black">
-                                            <a href={`/dashboard/transactions/details/${transaction.id}`} className="outline-0 focus:[&>*]:bg-neutral-800 hover:[&>*]:bg-neutral-800">
+                                            <Link href={`/dashboard/transactions/details/${transaction.id}`} className="outline-0 focus:[&>*]:bg-neutral-800 hover:[&>*]:bg-neutral-800">
                                                 <div className="flex items-start p-2 rounded-lg bg-neutral-950">
                                                     <div className="flex flex-col flex-1">
                                                         <span className="font-medium">{transaction.description}</span>
@@ -55,7 +64,7 @@ export default function TransactionsList({ transactions }: {
                                                     </div>
                                                     <MoneyBadge amount={transaction.amount} />
                                                 </div>
-                                            </a>
+                                            </Link>
                                         </li>
                                     )
                                 })}

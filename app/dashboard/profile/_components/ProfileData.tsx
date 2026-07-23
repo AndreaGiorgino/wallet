@@ -6,9 +6,8 @@ import Loader from "@/app/_components/Loader/Loader"
 import Paper from "@/app/_components/Paper"
 import TextInput from "@/app/_components/TextInput"
 import { useSession } from "next-auth/react"
-import { useRouter } from "next/navigation"
-import { useState, useTransition } from "react"
-import { refreshProfile, profileUpdate } from "../actions"
+import { useEffect, useState, useTransition } from "react"
+import { profileUpdate, refreshProfile } from "../actions"
 
 export interface User {
     first_name: string,
@@ -47,7 +46,12 @@ export default function ProfileData({ user }: { user?: User }) {
         })
     }
 
-    if (status === "loading")
+    useEffect(() => {
+        if (user)
+            setFormState(user)
+    }, [user])
+
+    if (status === "loading" || pending)
         return <Loader />
 
     return (
@@ -86,12 +90,12 @@ export default function ProfileData({ user }: { user?: User }) {
             </Paper>
             {editing ? (
                 <div className="flex flex-col gap-4 justify-end items-center text-sm sm:flex-row">
-                    <Button label="Cancel" onClick={() => setEditing(false)} className="w-full invert sm:w-auto" disabled={pending} />
-                    <Button label="Save" type="submit" form="data-form" disabled={pending} />
+                    <Button label="Cancel" onClick={() => setEditing(false)} className="w-full invert sm:w-auto" />
+                    <Button label="Save" type="submit" form="data-form" />
                 </div>
             ) : (
                 <div className="flex flex-col justify-end items-center text-sm sm:flex-row">
-                    <Button label="Edit" onClick={() => setEditing(true)} disabled={pending} />
+                    <Button label="Edit" onClick={() => setEditing(true)} />
                 </div>
             )}
         </div>
