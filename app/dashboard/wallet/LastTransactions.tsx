@@ -1,12 +1,21 @@
+"use client"
+
 import ErrorMessage from "@/app/_components/ErrorMessage";
 import { Transaction } from "../transactions/details/[[...slug]]/_components/TransactionDetails";
 import Link from "next/link";
 import MoneyBadge from "../transactions/_components/MoneyBadge";
 import Paper from "@/app/_components/Paper";
+import { useSession } from "next-auth/react";
+import Loader from "@/app/_components/Loader/Loader";
 
 export default function LastTransactions({ transactions = [] }: { transactions?: Transaction[] }) {
     if (!transactions)
         return <ErrorMessage text="Failed to load transactions." />
+
+    const { status } = useSession()
+
+    if (status === "loading")
+        return <></>
 
     return (
         <Paper title="Recent transactions" contentClassName="bg-zinc-50 dark:bg-black px-0">
