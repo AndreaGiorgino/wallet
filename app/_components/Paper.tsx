@@ -19,7 +19,7 @@ export default function Paper({
     children,
 }: Readonly<PaperProps>) {
     return (
-        <div className={`flex flex-col gap-3 ${className}`}>
+        <section className={`flex flex-col gap-3 ${className}`}>
             <div id="header" className="flex flex-col sm:gap-6 sm:items-end sm:flex-row">
                 {title && <h3 className="text-md text-heading">{title}</h3>}
                 <ErrorMessage text={error} className="flex-1" />
@@ -27,6 +27,6 @@ export default function Paper({
             <div className={`p-4 w-full rounded-lg paper-content bg-neutral-950 ${contentClassName}`}>
                 {children}
             </div>
-        </div >
+        </section>
     )
 }
