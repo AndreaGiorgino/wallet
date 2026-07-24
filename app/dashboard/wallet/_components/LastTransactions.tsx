@@ -1,12 +1,11 @@
 "use client"
 
 import ErrorMessage from "@/app/_components/ErrorMessage";
-import { Transaction } from "../transactions/details/[[...slug]]/_components/TransactionDetails";
-import Link from "next/link";
-import MoneyBadge from "../transactions/_components/MoneyBadge";
 import Paper from "@/app/_components/Paper";
 import { useSession } from "next-auth/react";
-import Loader from "@/app/_components/Loader/Loader";
+import Link from "next/link";
+import MoneyBadge from "../../transactions/_components/MoneyBadge";
+import { Transaction } from "../../transactions/details/[[...slug]]/_components/TransactionDetails";
 
 export default function LastTransactions({ transactions = [] }: { transactions?: Transaction[] }) {
     if (!transactions)
@@ -15,7 +14,7 @@ export default function LastTransactions({ transactions = [] }: { transactions?:
     const { status } = useSession()
 
     if (status === "loading")
-        return <></>
+        return
 
     return (
         <div className="flex flex-col gap-8 px-2">
@@ -24,7 +23,7 @@ export default function LastTransactions({ transactions = [] }: { transactions?:
                     {transactions.map(transaction => {
                         return (
                             <li key={transaction.id} className="mt-1 bg-zinc-50 dark:bg-black rounded-lg">
-                                <Link href={`/dashboard/transactions/details/${transaction.id}`} className="outline-0 focus:[&>*]:bg-neutral-800 hover:[&>*]:bg-neutral-800">
+                                <Link href={`/dashboard/transactions/details/${transaction.id}`} title={transaction.description} aria-label={transaction.description} className="outline-0 focus:[&>*]:bg-neutral-800 hover:[&>*]:bg-neutral-800">
                                     <div className="flex items-start p-2 rounded-lg bg-neutral-950">
                                         <div className="flex flex-col flex-1 gap-1">
                                             <span className="font-medium">{transaction.description}</span>
