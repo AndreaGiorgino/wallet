@@ -12,11 +12,6 @@ import { CgDanger } from "react-icons/cg"
 import { Transaction } from "../details/[[...slug]]/_components/TransactionDetails"
 import MoneyBadge from "./MoneyBadge"
 
-const getTimeString = (dateString: string) => {
-    const date = new Date(dateString)
-    return `${("0" + date.getUTCHours()).slice(-2)}:${("0" + date.getUTCMinutes()).slice(-2)}`
-}
-
 export interface TransactionsGroup {
     ["date"]: string,
     ["items"]: Transaction[]
@@ -60,9 +55,9 @@ export default function TransactionsList({ transactions }: { transactions?: Tran
         return <Loader />
 
     return (
-        <div className="flex flex-col">
-            <div className="sticky mt-[-1em] left-0 w-full flex justify-center">
-                <div className="flex gap-4 items-end w-full max-w-md rounded-md">
+        <div className="relative flex flex-col">
+            <div className="w-full flex justify-center sticky top-0 left-0 py-4 bg-zinc-50 dark:bg-black">
+                <div className="flex gap-4 items-end w-full max-w-md rounded-md" >
                     <TextInput name="search-input" placeholder="Search..." defaultValue={query} onChange={(e) => setQuery(e.target.value)} />
                     <Button label="+" onClick={() => router.push("/dashboard/transactions/details")} className="!px-4 flex-1" />
                 </div>
@@ -75,7 +70,7 @@ export default function TransactionsList({ transactions }: { transactions?: Tran
                         return
 
                     return (
-                        <section key={date} className="flex flex-col flex-1 my-4">
+                        <section key={date} className="flex flex-col flex-1 mt-[2.5em]">
                             <span className="font-bold">{date}</span>
                             <ul className="list-none">
                                 {filtered.map(transaction => {
@@ -85,7 +80,7 @@ export default function TransactionsList({ transactions }: { transactions?: Tran
                                                 <div className="flex items-start p-2 rounded-lg bg-neutral-950">
                                                     <div className="flex flex-col flex-1 gap-1">
                                                         <span className="font-medium">{transaction.description}</span>
-                                                        <span className="text-sm text-gray-500">{getTimeString(transaction.started_date)}</span>
+                                                        <span className="text-sm text-gray-500">{new Date(transaction.started_date).toLocaleTimeString().replace(/:00\s/, " ")}</span>
                                                     </div>
                                                     <MoneyBadge amount={transaction.amount} />
                                                 </div>
@@ -98,11 +93,11 @@ export default function TransactionsList({ transactions }: { transactions?: Tran
                     )
                 })
             ) : (
-                <div className="inline-flex gap-3 items-center px-2 py-2 mt-6 text-sm font-medium text-white rounded-lg text-medium bg-yellow-700/40">
+                <div className="inline-flex gap-3 items-center px-2 py-2 text-sm font-medium text-white rounded-lg text-medium bg-yellow-700/40">
                     <CgDanger size={20} />
                     No transactions found
                 </div>
             )}
-        </div >
+        </div>
     )
 }

@@ -172,11 +172,11 @@ export default function TransactionDetails({ types, states, transaction }: {
                         </div>
                         <div className="flex flex-col pb-3 h-full border-b-1 sm:col-span-3">
                             <span className="mb-4 text-sm">Started Date</span>
-                            <span className="text-sm text-heading">{formState.started_date}</span>
+                            <span className="text-sm text-heading">{new Date(formState.started_date).toLocaleString()}</span>
                         </div>
                         <div className="flex flex-col pb-3 h-full border-b-1 sm:col-span-3">
                             <span className="mb-4 text-sm">Completed Date</span>
-                            <span className="text-sm text-heading">{formState.completed_date}</span>
+                            <span className="text-sm text-heading">{new Date(formState.completed_date).toLocaleString()}</span>
                         </div>
                     </div>
                 )}

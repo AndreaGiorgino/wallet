@@ -25,7 +25,7 @@ export default function ProfileDelete() {
     }
 
     if (status === "loading" || pending)
-        return <></>
+        return
 
     return (
         <div className="flex flex-col gap-8 px-2">

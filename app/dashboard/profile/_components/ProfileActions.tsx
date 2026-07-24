@@ -7,10 +7,10 @@ export default function ProfileActions() {
     const { status } = useSession()
 
     if (status === "loading")
-        return <></>
+        return
 
     return (
-        <div className="flex flex-col gap-4 justify-end items-center sm:flex-row">
+        <div className="flex flex-col gap-4 justify-end items-center sm:flex-row px-2">
             <Button label="Sign Out" onClick={() => signOut()} />
         </div>
     )
