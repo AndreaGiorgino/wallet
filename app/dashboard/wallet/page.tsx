@@ -2,7 +2,8 @@ import { getServerSession } from "next-auth"
 import Balance from "./_components/Balance"
 import { authOptions } from "@/app/api/auth/[...nextauth]/auth"
 import { Transaction } from "../transactions/details/[[...slug]]/_components/TransactionDetails"
-import LastTransactions from "./LastTransactions"
+import LastTransactions from "./_components/LastTransactions"
+import Spent from "./_components/Spent"
 
 export default async function Wallet() {
     const session = await getServerSession(authOptions)
@@ -25,7 +26,23 @@ export default async function Wallet() {
 
     const lastTransactions = await (async () => {
         try {
-            const res = await fetch(`${process.env.API_URL}/wallet/transactions/5`, {
+            const res = await fetch(`${process.env.API_URL}/wallet/transactions/3`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${session?.accessToken}`,
+                },
+            })
+
+            const data = await res.json()
+            if (!res.ok || !data)
+                throw {}
+            return data.transactions as Transaction[]
+        } catch { }
+    })()
+
+    const monthTransactions = await (async () => {
+        try {
+            const res = await fetch(`${process.env.API_URL}/wallet/transactions?month=${new Date().getMonth() + 1}`, {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${session?.accessToken}`,
@@ -45,6 +62,7 @@ export default async function Wallet() {
                 <Balance amount={amount} />
             </div>
             <LastTransactions transactions={lastTransactions} />
+            <Spent transactions={monthTransactions} />
         </div>
     )
 }
