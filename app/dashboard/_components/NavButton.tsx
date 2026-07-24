@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { ReactNode, useEffect, useState } from "react"
 
@@ -22,10 +23,12 @@ export default function NavButton({
     }, [pathname])
 
     return (
-        <a href={callbackUrl} title={label} aria-label={label}>
-            <div className={`flex px-2 py-2 gap-1 items-center justify-center rounded-full transition cursor-pointer bg-neutral-950 text-neutral-50 active:scale-95 hover:scale-110 focus:scale-110 w-[4em] h-[2.5em] ${active && "invert"}`}>
-                {children}
-            </div>
-        </a>
+        <li>
+            <Link href={callbackUrl} title={label} aria-label={label} className="outline-0 active:[&>*]:scale-95 hover:[&>*]:scale-110 focus:[&>*]:scale-110">
+                <div className={`flex px-2 py-2 gap-1 items-center mx-[.25em] justify-center rounded-full transition cursor-pointer text-white w-[4em] h-[2.5em] ring-2 ring-white/25 ${active && "text-black bg-black !ring-black"}`}>
+                    {children}
+                </div>
+            </Link>
+        </li>
     )
 }
