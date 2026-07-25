@@ -7,8 +7,8 @@ Funds and transactions web app in [NEXT.js](https://nextjs.org)
 > functionalities might be missing
 
 <div style="display: flex; gap: 10px;">
-<img alt="wallet page" src="images/wallet.png" width="720" />
-<img alt="transactions page" src="images/transactions.png" width="720" />
+<img alt="wallet page" src="images/wallet.png" width="350" />
+<img alt="transactions page" src="images/transactions.png" width="350" />
 </div>
 
 ## Dependencies
