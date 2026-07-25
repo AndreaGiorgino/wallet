@@ -6,9 +6,9 @@ Funds and transactions web app in [NEXT.js](https://nextjs.org)
 > Since this app is still in development, it may not work correctly or some
 > functionalities might be missing
 
-<div style="display: flex;">
-<img alt="wallet page" src="images/wallet.png" height="720" />
-<img alt="transactions page" src="images/transactions.png" height="720" />
+<div style="display: flex; gap: 10px;">
+<img alt="wallet page" src="images/wallet.png" width="720" />
+<img alt="transactions page" src="images/transactions.png" width="720" />
 </div>
 
 ## Dependencies
