@@ -29,7 +29,7 @@ export default function Spent({ transactions }: { transactions?: Transaction[] }
 
     return (
         <Paper title="Spent this month">
-            <span className="font-medium">&euro; {amount}</span>
+            <span className="font-medium">&euro; {amount.toFixed(2)}</span>
             <SpentChart transactions={state} />
         </Paper>
     )
