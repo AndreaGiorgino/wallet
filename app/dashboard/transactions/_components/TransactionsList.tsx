@@ -39,7 +39,7 @@ export default function TransactionsList({ transactions }: { transactions?: Tran
             const newParams = new URLSearchParams(params.toString())
 
             if (query.trim())
-                newParams.set("q", query.trim())
+                newParams.set("q", query.trim().toLowerCase())
             else
                 newParams.delete("q")
 
@@ -64,7 +64,9 @@ export default function TransactionsList({ transactions }: { transactions?: Tran
             </div>
             {state.length !== 0 ? (
                 state.map(({ date, items }) => {
-                    const filtered = items.filter(transaction => transaction.description.includes(query));
+                    const filtered = items.filter(transaction => transaction.description
+                        .toLowerCase()
+                        .includes(query));
 
                     if (filtered.length === 0)
                         return
