@@ -6,6 +6,11 @@ Funds and transactions web app in [NEXT.js](https://nextjs.org)
 > Since this app is still in development, it may not work correctly or some
 > functionalities might be missing
 
+## Dependencies
+
+- [npm](https://docs.npmjs.com)
+- [wallet-api](https://github.com/AndreaGiorgino/wallet-api)
+
 ## Run
 
 ```bash
