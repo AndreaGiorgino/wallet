@@ -29,7 +29,7 @@ export default function LastTransactions({ transactions = [] }: { transactions?:
                                             <span className="font-medium">{transaction.description}</span>
                                             <span className="text-sm text-gray-500">{new Date(transaction.started_date).toLocaleString()}</span>
                                         </div>
-                                        <MoneyBadge amount={transaction.amount} />
+                                        <MoneyBadge cents_amount={transaction.cents_amount} />
                                     </div>
                                 </Link>
                             </li>

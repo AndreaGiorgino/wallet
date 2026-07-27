@@ -7,6 +7,12 @@ import { Transaction } from "../../transactions/details/[[...slug]]/_components/
 import { useSession } from "next-auth/react"
 import SpentChart from "./SpentChart"
 
+const monthNames = [
+    "January", "February", "March", "April",
+    "May", "June", "July", "August",
+    "September", "October", "November", "December"
+]
+
 export default function Spent({ transactions }: { transactions?: Transaction[] }) {
     if (!transactions)
         return <ErrorMessage text="Failed to load current month transactions." />
@@ -15,8 +21,8 @@ export default function Spent({ transactions }: { transactions?: Transaction[] }
 
     const [state, setState] = useState<Transaction[]>(transactions!)
 
-    const amount = transactions!.filter(transaction => transaction.amount < 0)
-        .map(transaction => -transaction.amount)
+    const cents_amount = transactions!.filter(transaction => transaction.cents_amount < 0)
+        .map(transaction => -transaction.cents_amount)
         .reduce((prev, next) => prev + next, 0)
 
     useEffect(() => {
@@ -28,8 +34,8 @@ export default function Spent({ transactions }: { transactions?: Transaction[] }
         return
 
     return (
-        <Paper title="Spent this month">
-            <span className="font-medium">&euro; {amount.toFixed(2)}</span>
+        <Paper title={`Spent in ${monthNames[new Date().getUTCMonth()]}`}>
+            <span className="font-medium">&euro; {(cents_amount / 100).toFixed(2)}</span>
             <SpentChart transactions={state} />
         </Paper>
     )

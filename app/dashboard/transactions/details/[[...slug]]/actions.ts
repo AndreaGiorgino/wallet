@@ -28,7 +28,7 @@ export async function transactionCreate(formData: FormData) {
             body: JSON.stringify({
                 type: formData.get("type"),
                 description: formData.get("description"),
-                amount: formData.get("amount"),
+                cents_amount: parseFloat(formData.get("amount")!.toString()) * 100,
                 started_date: formData.get("started_date"),
                 completed_date: formData.get("completed_date"),
                 state: formData.get("state"),
@@ -65,7 +65,7 @@ export async function transactionUpdate(transactionId: number, formData: FormDat
                 id: transactionId,
                 type: formData.get("type"),
                 description: formData.get("description"),
-                amount: formData.get("amount"),
+                cents_amount: parseFloat(formData.get("amount")!.toString()) * 100,
                 started_date: formData.get("started_date"),
                 completed_date: formData.get("completed_date"),
                 state: formData.get("state"),

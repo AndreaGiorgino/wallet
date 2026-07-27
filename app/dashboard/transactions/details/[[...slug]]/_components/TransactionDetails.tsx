@@ -22,7 +22,7 @@ function dateTimeNowLocale() {
 export interface Transaction {
     id?: number,
     description: string,
-    amount: number,
+    cents_amount: number,
     type: string,
     state: string,
     started_date: string,
@@ -32,7 +32,7 @@ export interface Transaction {
 const defaultTransaction: Transaction = {
     id: undefined,
     description: "",
-    amount: 1000,
+    cents_amount: 100_000,
     type: "",
     state: "",
     started_date: dateTimeNowLocale().toISOString().slice(0, 16),
@@ -89,6 +89,16 @@ export default function TransactionDetails({ types, states, transaction }: {
 
     const handleSubmit = (formData: FormData) => {
         startTransition(async () => {
+            setFormState({
+                ...formState,
+                description: formData.get("description")!.toString(),
+                cents_amount: parseFloat(formData.get("amount")!.toString()) * 100,
+                type: formData.get("type")?.toString() ?? defaultTransaction.type,
+                state: formData.get("state")?.toString() ?? defaultTransaction.state,
+                started_date: formData.get("started_date")!.toString(),
+                completed_date: formData.get("completed_date")?.toString() ?? defaultTransaction.completed_date,
+            })
+
             const res = isNew
                 ? await transactionCreate(formData)
                 : await transactionUpdate(formState.id!, formData)
@@ -103,15 +113,7 @@ export default function TransactionDetails({ types, states, transaction }: {
                     await refreshTransactions()
                     await refreshTransactionDetails(formState.id!)
                 }
-            } else setFormState({
-                ...formState,
-                description: formData.get("description")!.toString(),
-                amount: parseFloat(formData.get("amount")!.toString()),
-                type: formData.get("type")?.toString() ?? defaultTransaction.type,
-                state: formData.get("state")?.toString() ?? defaultTransaction.state,
-                started_date: formData.get("started_date")!.toString(),
-                completed_date: formData.get("completed_date")?.toString() ?? defaultTransaction.completed_date,
-            })
+            }
 
             setError(res.error ?? "")
         })
@@ -136,7 +138,7 @@ export default function TransactionDetails({ types, states, transaction }: {
                             </div>
                             <div className="relative col-span-full sm:col-span-2">
                                 <span className="absolute bottom-[0.6em] left-[.75em] font-bold">&euro;</span>
-                                <TextInput name="amount" type="number" label="Amount" placeholder="Enter amount..." defaultValue={formState.amount.toString()} className="[&>input]:ps-[2.5em]" required />
+                                <TextInput name="amount" type="number" label="Amount" placeholder="Enter cents_amount..." defaultValue={(formState.cents_amount / 100).toFixed(2).toString()} className="[&>input]:ps-[2.5em]" step={.5} required />
                             </div>
                             <div className="sm:col-span-2">
                                 <DropdownButton id="type" label="Transaction Type" items={types} defaultValue={formState.type} className="w-full" />
@@ -148,7 +150,7 @@ export default function TransactionDetails({ types, states, transaction }: {
                                 <TextInput name="started_date" type="datetime-local" label="Started Date" placeholder="Enter started date..." defaultValue={formState.started_date} required />
                             </div>
                             <div className="sm:col-span-3">
-                                <TextInput name="completed_date" type="datetime-local" label="Completed Date" placeholder="Enter completed date..." defaultValue={formState.completed_date} required />
+                                <TextInput name="completed_date" type="datetime-local" label="Completed Date" placeholder="Enter completed date..." defaultValue={formState.completed_date} />
                             </div>
                         </div>
                     </form>
@@ -160,7 +162,7 @@ export default function TransactionDetails({ types, states, transaction }: {
                         </div>
                         <div className="flex relative flex-col col-span-full pb-3 h-full border-b-1 sm:col-span-2">
                             <span className="mb-4 text-sm">Amount</span>
-                            <MoneyBadge amount={formState.amount} />
+                            <MoneyBadge cents_amount={formState.cents_amount} />
                         </div>
                         <div className="flex flex-col pb-3 h-full border-b-1 sm:col-span-2">
                             <span className="mb-4 text-sm">Transaction Type</span>

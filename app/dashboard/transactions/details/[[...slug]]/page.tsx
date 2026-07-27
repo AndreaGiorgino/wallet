@@ -59,7 +59,7 @@ export default async function Details({ params }: {
                 started_date: data.started_date,
                 completed_date: data.completed_date,
                 description: data.description,
-                amount: data.amount,
+                cents_amount: data.cents_amount,
                 state: data.state,
             } as Transaction
         } catch { }

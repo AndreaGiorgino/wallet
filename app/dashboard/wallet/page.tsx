@@ -8,7 +8,7 @@ import Spent from "./_components/Spent"
 export default async function Wallet() {
     const session = await getServerSession(authOptions)
 
-    const amount = await (async () => {
+    const cents_amount = await (async () => {
         try {
             const res = await fetch(`${process.env.API_URL}/wallet/balance`, {
                 method: "GET",
@@ -20,7 +20,7 @@ export default async function Wallet() {
             const data = await res.json()
             if (!res.ok || !data)
                 throw {}
-            return data.balance
+            return data.cents_balance
         } catch { }
     })()
 
@@ -42,7 +42,7 @@ export default async function Wallet() {
 
     const monthTransactions = await (async () => {
         try {
-            const res = await fetch(`${process.env.API_URL}/wallet/transactions?month=${new Date().getMonth() + 1}`, {
+            const res = await fetch(`${process.env.API_URL}/wallet/transactions?month=${new Date().getUTCMonth() + 1}`, {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${session?.accessToken}`,
@@ -59,7 +59,7 @@ export default async function Wallet() {
     return (
         <div className="flex flex-col flex-1 gap-6 w-full">
             <div className="mb-6">
-                <Balance amount={amount} />
+                <Balance cents_amount={cents_amount} />
             </div>
             <LastTransactions transactions={lastTransactions} />
             <Spent transactions={monthTransactions} />

@@ -56,9 +56,9 @@ export default function SpentChart({ transactions }: { transactions?: Transactio
                 fill: true,
                 label: "Amount spent",
                 data: labels.map(day =>
-                    state.filter(transaction => transaction.amount < 0
+                    state.filter(transaction => transaction.cents_amount < 0
                         && new Date(transaction.started_date).getDate().toString().padStart(2, "0") === day)
-                        .map(transaction => -transaction.amount)
+                        .map(transaction => -transaction.cents_amount)
                         .reduce((prev, next) => prev + next, 0)),
                 borderColor: "rgb(53, 162, 235)",
                 backgroundColor: "rgba(53, 162, 235, 0.5)",
